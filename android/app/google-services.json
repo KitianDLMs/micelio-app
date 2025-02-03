@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "540633116158",
+    "project_id": "micelio-flutter",
+    "storage_bucket": "micelio-flutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:540633116158:android:9da9779138883a7e0864af",
+        "android_client_info": {
+          "package_name": "com.echnelapp.micelio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjxBRU2GL6PuUuW1lfTRh8kXQQr9T-O5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
