@@ -70,12 +70,6 @@ class ClientProductsListController extends GetxController {
     }
   }
 
-  // void getCategories() async {
-  //   var result = ;
-  //   categories.clear();
-  //   categories.addAll(result);
-  // }
-
   Future<List<Product>> getProducts(
       String idCategory, String productName) async {
     try {

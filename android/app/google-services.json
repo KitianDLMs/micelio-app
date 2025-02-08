@@ -12,7 +12,28 @@
           "package_name": "com.echnelapp.micelio"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "540633116158-4dclrv7184dkg5qiihqpgg4434mh1eeb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.echnelapp.micelio",
+            "certificate_hash": "a258c3856431eccb1558b4de919186b0cf36d3c1"
+          }
+        },
+        {
+          "client_id": "540633116158-nsco447usmfto4qfoifia8nkeh9ndbp4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.echnelapp.micelio",
+            "certificate_hash": "90372ebcea1d8fab56ab145ace7886d4d976ea94"
+          }
+        },
+        {
+          "client_id": "540633116158-qdr6hr4sl25ef19fe98qs5htd96vjs46.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCjxBRU2GL6PuUuW1lfTRh8kXQQr9T-O5I"
@@ -20,7 +41,20 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "540633116158-qdr6hr4sl25ef19fe98qs5htd96vjs46.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "540633116158-r4cbb19jkv2f810b38919at6pgiug1tp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.echnelapp.micelio",
+                "app_store_id": "6739948789"
+              }
+            }
+          ]
         }
       }
     }

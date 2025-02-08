@@ -2,9 +2,9 @@ import 'dart:io';
 
 class Environment {
 
-  // static String API_URL  = Platform.isAndroid ? "http://192.168.0.103:3000/" : 'http://localhost:3000/'; 
+  // static String API_URL  = Platform.isAndroid ? "http://192.168.0.103:3000/" : 'http://192.168.0.103:3000/'; 
   static const String API_URL  = "https://micelio.onrender.com/"; 
-  // static String API_URL_OLD  = Platform.isAndroid ? "192.168.0.103:3000" : 'http://localhost:3000/';
+  // static String API_URL_OLD  = Platform.isAndroid ? "192.168.0.103:3000" : 'http://192.168.0.103:3000/';
   static const String API_URL_OLD  = "https://micelio.onrender.com/";
 
   static const String API_MERCADO_PAGO = "https://api.mercadopago.com/v1";
@@ -19,4 +19,8 @@ class Environment {
       
   static String socketUrl = 'https://micelio.onrender.com/';
   // static String socketUrl = Platform.isAndroid ? 'http://192.168.0.103:3000/' : 'http://localhost:3000/';  
+
+  static String redirectUrlApple = 'https://micelio.onrender.com/callbacks/sign_in_with_apple';
+
+  static String termsApp = 'https://micelio-terms.netlify.app/';
 }

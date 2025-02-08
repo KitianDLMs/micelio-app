@@ -156,13 +156,16 @@ class UsersProvider extends GetConnect {
     return responseApi;
   }
 
-  deleteUser(id) async {
+  deleteUser(id) async {    
     Response response = await delete('$url/delete/$id', headers: {
+      // api/users
       'Content-Type': 'application/json',
       // 'Authorization': userSession.sessionToken ?? ''
     }); // ESPERR HASTA QUE EL SERVIDOR NOS RETORNE LA RESPUESTA
-    if (response.status.code == 201) {
-      Get.offNamedUntil('/', (route) => false);
+    print(response.body);
+    if (response.status.code == 201) {      
+      Get.offAllNamed(
+                      '/home-tutorial');
     }
     return response;
   }

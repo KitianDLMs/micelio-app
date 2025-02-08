@@ -41,7 +41,7 @@ class ClientAddressCreateController extends GetxController {
   void createAddress() async {
     String addressName = addressController.text;
     String neighborhood = neighborhoodController.text;
-
+    print('userid createaddress${user}');
     if (isValidForm(addressName, neighborhood)) {
       Address address = Address(
           address: addressName,

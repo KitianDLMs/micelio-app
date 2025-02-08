@@ -27,6 +27,6 @@ class ClientHomeController extends GetxController {
     GetStorage().remove('user');
 
     Get.offNamedUntil(
-        '/', (route) => false); // ELIMINAR EL HISTORIAL DE PANTALLAS
+        '/', (route) => false);
   }
 }

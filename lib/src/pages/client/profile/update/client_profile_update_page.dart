@@ -5,22 +5,20 @@ import 'package:micelio/src/pages/client/profile/update/client_profile_update_co
 class ClientProfileUpdatePage extends StatelessWidget {
   final ClientProfileUpdateController con = Get.put(ClientProfileUpdateController());
 
-  // ClientProfileUpdatePage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber,
+        backgroundColor: Color(0xffF2F2F2),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Get.back(),
         ),
       ),
+      backgroundColor: const Color(0xffF2F2F2), // Fondo uniforme
       body: Stack(
         children: [
-          _backgroundCover(context),
           _boxForm(context),
           _imageUser(context),
         ],
@@ -28,32 +26,24 @@ class ClientProfileUpdatePage extends StatelessWidget {
     );
   }
 
-  Widget _backgroundCover(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.35,
-      color: Colors.amber,
-    );
-  }
-
   Widget _boxForm(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.45,
       margin: EdgeInsets.only(
-        top: MediaQuery.of(context).size.height * 0.3,
+        top: MediaQuery.of(context).size.height * 0.2,
         left: 50,
         right: 50,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color(0xffF2F2F2),
         borderRadius: const BorderRadius.all(Radius.circular(20)),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black54,
-            blurRadius: 15,
-            offset: Offset(0, 0.75),
-          ),
-        ],
+        // boxShadow: const [
+        //   BoxShadow(
+        //     color: Colors.black54,
+        //     blurRadius: 15,
+        //     offset: Offset(0, 0.75),
+        //   ),
+        // ],
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -139,27 +129,32 @@ class ClientProfileUpdatePage extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      child: ElevatedButton(
-        onPressed: () => con.updateInfo(context),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.amber,
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+      child: MaterialButton(
+            splashColor: Colors.transparent,
+            minWidth: double.infinity,
+            height: 40,
+            color: Color(0xffF2F2F2),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [                
+                const SizedBox(width: 10),
+                const Text(
+                  "  ACTUALIZAR",
+                  style: TextStyle(color: Colors.black, fontSize: 17),
+                ),
+              ],
+            ),
+            onPressed: () => con.updateInfo(context),
           ),
-        ),
-        child: const Text(
-          'ACTUALIZAR',
-          style: TextStyle(color: Colors.black, fontSize: 16),
-        ),
-      ),
     );
   }
 
   Widget _imageUser(BuildContext context) {
     return SafeArea(
       child: Container(
-        margin: const EdgeInsets.only(top: 25),
+        margin: const EdgeInsets.only(top: 10),
         alignment: Alignment.topCenter,
         child: GetBuilder<ClientProfileUpdateController>(
           builder: (value) => CircleAvatar(

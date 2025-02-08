@@ -51,9 +51,9 @@ class ClientProfileInfoController extends GetxController {
     Get.off(LoginPage());
   }
 
-  void delete(BuildContext context) async {
-    showAlertDialog(context);
-    await usersProvider.deleteUser(user.value.id);
+  void delete(BuildContext context) async {    
+    showAlertDialog(context);    
+    await usersProvider.deleteUser(user.value.id);    
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('Usuario Eliminado!'),
       duration: Duration(seconds: 6),

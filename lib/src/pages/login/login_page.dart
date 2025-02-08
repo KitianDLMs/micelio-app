@@ -105,11 +105,31 @@ class _Form extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          BotonAzul(
-            text: 'Ingresar',
-            onPressed: () =>
-                con.login(context), // Llamamos al método de inicio de sesión
-          ),
+          MaterialButton(
+                splashColor: Colors.transparent,
+                minWidth: double.infinity,
+                height: 40,
+                color: Colors.blue,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/img/logo_micelio_polera.png',
+                      height: 20,
+                    ),
+                    const SizedBox(width: 10),
+                    const Text(
+                      "  Iniciar sesión",
+                      style: TextStyle(color: Colors.white, fontSize: 17),
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  con.login(context);
+                },
+              ),          
         ],
       ),
     );

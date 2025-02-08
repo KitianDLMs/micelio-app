@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:micelio/src/environment/environment.dart';
+import 'package:micelio/src/providers/apple_signin_service.dart';
 import 'package:micelio/src/providers/blocs/notifications/notifications_bloc.dart';
+import 'package:micelio/src/providers/google_signin_service.dart';
 import 'package:micelio/src/providers/preferences/pref_usuarios.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ClientHomeTutorialPage extends StatefulWidget {
-  // ClientHomeTutorialPage({super.key});
-
   @override
   State<ClientHomeTutorialPage> createState() => _ClientHomeTutorialPageState();
 }
@@ -16,8 +19,7 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final Uri _termsAndConditionsUrl =
-      Uri.parse('https://micelio-terms.netlify.app/');
+  final Uri _termsAndConditionsUrl = Uri.parse(Environment.termsApp);
 
   Future<void> _launchTermsAndConditions() async {
     if (!await launchUrl(_termsAndConditionsUrl)) {
@@ -26,7 +28,7 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
   }
 
   @override
-  Widget build(BuildContext context) {   
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         color: const Color(0xffF2F2F2),
@@ -70,9 +72,17 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
                 children: [
                   _currentPage > 0
                       ? ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color.fromARGB(255, 240, 240, 240))),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(255, 240, 240,
+                                240), // Fondo igual al segundo botón
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10), // Ajuste de padding
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  8), // Bordes redondeados
+                            ),
+                          ),
                           onPressed: () {
                             _pageController.previousPage(
                               duration: Duration(milliseconds: 300),
@@ -85,18 +95,35 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
                       : SizedBox.shrink(),
                   if (_currentPage < 2)
                     ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromARGB(255, 240, 240, 240))),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(
+                            255, 240, 240, 240), // Fondo igual al segundo botón
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10), // Ajuste de padding
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(8), // Bordes redondeados
+                        ),
+                      ),
                       onPressed: () {
+                        // Acción del segundo botón
                         _pageController.nextPage(
-                          duration: Duration(milliseconds: 300),
+                          duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
                         );
                       },
-                      child: Text(
-                        "Siguiente",
-                        style: TextStyle(color: Colors.black),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Siguente",
+                            style: TextStyle(
+                              color: Colors
+                                  .black, // Texto negro como el segundo botón
+                              fontSize: 17,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                 ],
@@ -151,29 +178,80 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
-          Row(
+          Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        Color.fromARGB(255, 240, 240, 240))),
+              MaterialButton(
+                splashColor: Colors.transparent,
+                minWidth: double.infinity,
+                height: 40,
+                color: Colors.blue,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/img/logo_micelio_polera.png',
+                      height: 20,
+                    ),
+                    const SizedBox(width: 10),
+                    const Text(
+                      "  Iniciar sesión",
+                      style: TextStyle(color: Colors.white, fontSize: 17),
+                    ),
+                  ],
+                ),
                 onPressed: () {
-                  // Get.offAllNamed('/');
                   Get.offNamedUntil('/', (route) => false);
                 },
-                child: Text("Iniciar sesión",
-                    style: TextStyle(color: Colors.black)),
               ),
-              ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        Color.fromARGB(255, 240, 240, 240))),
+              MaterialButton(
+                  splashColor: Colors.transparent,
+                  minWidth: double.infinity,
+                  height: 40,
+                  color: Colors.red,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(FontAwesomeIcons.google, color: Colors.white),
+                      Text(
+                        '  Iniciar con Google',
+                        style: TextStyle(color: Colors.white, fontSize: 17),
+                      )
+                    ],
+                  ),
+                  onPressed: () {
+                    GoogleSignInService.signInWithGoogle();
+                  }),
+              const SignInWithAppleButton(
+                text: 'Iniciar con Apple',
+                onPressed: AppleSignInService.signIn,
+              ),
+              MaterialButton(
+                splashColor: Colors.transparent,
+                minWidth: double.infinity,
+                height: 40,
+                color: const Color.fromARGB(255, 240, 240, 240),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.arrow_circle_up_rounded),
+                    const SizedBox(width: 10),
+                    const Text(
+                      "Omitir",
+                      style: TextStyle(color: Colors.black, fontSize: 17),
+                    ),
+                  ],
+                ),
                 onPressed: () {
                   Get.offAllNamed(
                       '/client/home'); // Navega a la pantalla principal
                 },
-                child: Text("Omitir", style: TextStyle(color: Colors.black)),
               ),
             ],
           ),
@@ -219,41 +297,94 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(image, size: 150, color: Colors.amber),
-          SizedBox(height: 32),
+          const SizedBox(height: 32),
           Text(
             title,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             description,
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 32),
-          Row(
+          const SizedBox(height: 32),
+          Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        Color.fromARGB(255, 240, 240, 240))),
+              MaterialButton(
+                splashColor: Colors.transparent,
+                minWidth: double.infinity,
+                height: 40,
+                color: Colors.blue,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/img/logo_micelio_polera.png',
+                      height: 20,
+                    ),
+                    const SizedBox(width: 10),
+                    const Text(
+                      "  Iniciar sesión",
+                      style: TextStyle(color: Colors.white, fontSize: 17),
+                    ),
+                  ],
+                ),
                 onPressed: () {
-                  Get.offAllNamed('/'); // Navega al login
+                  Get.offNamedUntil('/', (route) => false);
                 },
-                child: Text("Iniciar sesión",
-                    style: TextStyle(color: Colors.black)),
               ),
-              ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        Color.fromARGB(255, 240, 240, 240))),
+              MaterialButton(
+                splashColor: Colors.transparent,
+                minWidth: double.infinity,
+                height: 40,
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(FontAwesomeIcons.google, color: Colors.white),
+                    Text(
+                      '  Iniciar con Google',
+                      style: TextStyle(color: Colors.white, fontSize: 17),
+                    )
+                  ],
+                ),
+                onPressed: () {
+                  GoogleSignInService.signInWithGoogle();
+                },
+              ),
+              const SignInWithAppleButton(
+                text: 'Iniciar con Apple',
+                onPressed: AppleSignInService.signIn,
+              ),
+              MaterialButton(
+                splashColor: Colors.transparent,
+                minWidth: double.infinity,
+                height: 40,
+                color: const Color.fromARGB(255, 240, 240, 240),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.arrow_circle_up_rounded),
+                    const SizedBox(width: 10),
+                    const Text(
+                      "Omitir",
+                      style: TextStyle(color: Colors.black, fontSize: 17),
+                    ),
+                  ],
+                ),
                 onPressed: () {
                   Get.offAllNamed(
                       '/client/home'); // Navega a la pantalla principal
                 },
-                child: Text("Omitir", style: TextStyle(color: Colors.black)),
               ),
             ],
           ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:micelio/src/models/order.dart';
 import 'package:micelio/src/models/user.dart';
 import 'package:micelio/src/pages/client/orders/list/client_orders_list_page.dart';
 import 'package:micelio/src/pages/client/profile/info/client_profile_info_page.dart';
@@ -10,9 +9,9 @@ import 'package:micelio/src/pages/client/products/list/client_products_list_page
 import 'package:micelio/src/providers/noti_service.dart';
 import 'package:micelio/src/providers/socket_service.dart';
 import 'package:micelio/src/utils/custom_animated_bottom_bar.dart';
-import 'package:flutter_font_icons/flutter_font_icons.dart'; // Importa para los íconos sociales
+import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart'; // Importa el paquete url_launcher
+import 'package:url_launcher/url_launcher.dart';
 
 class ClientHomePage extends StatefulWidget {
   @override

@@ -62,5 +62,23 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>keychain-access-groups</key>
+    <array>
+        <string>$(AppIdentifierPrefix)com.google.GIDSignIn</string>
+    </array>
+	<key>GIDClientID</key>
+	<string>540633116158-r4cbb19jkv2f810b38919at6pgiug1tp.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!-- Este valor debe coincidir con el REVERSED_CLIENT_ID de GoogleService-Info.plist -->
+				<string>com.googleusercontent.apps.540633116158-r4cbb19jkv2f810b38919at6pgiug1tp</string>				
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
