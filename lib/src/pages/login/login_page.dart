@@ -46,7 +46,7 @@ class LoginPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Logo(),
+                Logo(titulo: 'Inicio de Sesión',),
                 _Form(con: con), // Pasamos el controlador al formulario
                 Labels(
                   ruta: 'register',
@@ -116,7 +116,7 @@ class _Form extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/img/logo_micelio_polera.png',
+                      'assets/img/repartidor.png',
                       height: 20,
                     ),
                     const SizedBox(width: 10),

@@ -14,7 +14,6 @@ class ClientAddressListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       bottomNavigationBar: SingleChildScrollView(
         child: Padding(
@@ -160,37 +159,62 @@ class ClientAddressListPage extends StatelessWidget {
   }
 
   Widget _radioSelectorAddress(Address address, int index) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Radio<int>(
-                value: index, // El índice único para esta opción
-                groupValue: con.radioValue.value, // Valor actual seleccionado
-                onChanged: con.handleRadioValueChange, // Maneja los cambios
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    address.address ?? '',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    address.neighborhood ?? '',
-                    style: TextStyle(fontSize: 12),
-                  )
-                ],
-              )
-            ],
-          ),
-          Divider(color: Colors.grey[400])
-        ],
-      ),
-    );
+  // Asigna el precio del delivery dependiendo del barrio
+  String deliveryPrice = '';
+  if (address.neighborhood == 'Huertos Familiares') {
+    deliveryPrice = '+ 1000';
+  } else if (address.neighborhood == 'Los Lingues') {
+    deliveryPrice = '+ 1500';
+  } else if (address.neighborhood == 'Santa Matilde') {
+    deliveryPrice = '+ 2000';
+  } else if (address.neighborhood == 'Alto el Manzano') {
+    deliveryPrice = '+ 2500';
   }
+
+  return Container(
+    margin: EdgeInsets.symmetric(horizontal: 20),
+    child: Column(
+      children: [
+        Row(
+          children: [
+            Radio<int>(
+              value: index, // El índice único para esta opción
+              groupValue: con.radioValue.value, // Valor actual seleccionado
+              onChanged: con.handleRadioValueChange, // Maneja los cambios
+              activeColor: Colors.blue, // Color cuando está seleccionado
+              fillColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.selected)) {
+                    return Colors.blue; // Color seleccionado
+                  }
+                  return Colors.black; // Color cuando no está seleccionado
+                },
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${address.address ?? ''} #${address.number ?? ''}',
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                Text(
+                  '${address.neighborhood ?? ''} $deliveryPrice', // Aquí mostramos el precio del delivery
+                  style: TextStyle(fontSize: 12, color: Colors.black),
+                )
+              ],
+            )
+          ],
+        ),
+        Divider(color: Colors.black)
+      ],
+    ),
+  );
+}
+
 
   Widget _textSelectAddress() {
     return Container(

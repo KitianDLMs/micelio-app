@@ -12,6 +12,23 @@ class CategoriesProvider extends GetConnect {
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
+  Future<List<Category>> getAllByTrade(String id) async {
+    Response response = await get('$url/getAllByTrade/$id', headers: {            
+      'Content-Type': 'application/json',
+      // 'Authorization': userSession.sessionToken ?? ''
+    }); // ESPERAR HASTA QUE EL SERVIDOR NOS RETORNE LA RESPUESTA
+    
+    if (response.statusCode == 401) {
+      Get.snackbar('Peticion denegada',
+          'Tu usuario no tiene permitido leer esta informacion');
+      return [];
+    }
+    
+    List<Category> categories = Category.fromJsonList(response.body['data']);
+
+    return categories;
+  }
+
   Future<List<Category>> getAll() async {
     Response response = await get('$url/getAll', headers: {
       'Content-Type': 'application/json',

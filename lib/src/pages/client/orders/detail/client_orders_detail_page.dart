@@ -3,12 +3,11 @@ import 'package:get/get.dart';
 import 'package:micelio/src/models/product.dart';
 import 'package:micelio/src/models/user.dart';
 import 'package:micelio/src/pages/client/orders/detail/client_orders_detail_controller.dart';
-// import 'package:micelio/src/pages/delivery/orders/detail/delivery_orders_detail_controller.dart';
 import 'package:micelio/src/utils/relative_time_util.dart';
 import 'package:micelio/src/widgets/no_data_widget.dart';
 
 class ClientOrdersDetailPage extends StatelessWidget {
-  ClientOrdersDetailController con = Get.put(ClientOrdersDetailController());  
+  ClientOrdersDetailController con = Get.put(ClientOrdersDetailController());
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +17,6 @@ class ClientOrdersDetailPage extends StatelessWidget {
             height: con.order.status == 'ENCAMINO'
                 ? MediaQuery.of(context).size.height * 0.4
                 : MediaQuery.of(context).size.height * 0.35,
-            // padding: EdgeInsets.only(top: 5),
             child: Column(
               children: [
                 _dataDate(),
@@ -51,9 +49,11 @@ class ClientOrdersDetailPage extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text('Repartidor y Telefono'),
+        title: Text('Repartidor y Telefono',
+            style: TextStyle(color: Colors.black)),
         subtitle: Text(
-            '${con.order.delivery?.name ?? 'No Asignado'} ${con.order.delivery?.lastname ?? ''} - ${con.order.delivery?.phone ?? '###'}'),
+            '${con.order.delivery?.name ?? 'No Asignado'} ${con.order.delivery?.lastname ?? ''} - ${con.order.delivery?.phone ?? '###'}',
+            style: TextStyle(color: Colors.black)),
         trailing: Icon(Icons.person),
       ),
     );
@@ -63,8 +63,10 @@ class ClientOrdersDetailPage extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text('Direccion de entrega'),
-        subtitle: Text(con.order.address?.address ?? ''),
+        title:
+            Text('Direccion de entrega', style: TextStyle(color: Colors.black)),
+        subtitle: Text(con.order.address?.address ?? '',
+            style: TextStyle(color: Colors.black)),
         trailing: Icon(Icons.location_on),
       ),
     );
@@ -74,9 +76,13 @@ class ClientOrdersDetailPage extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text('Fecha del pedido'),
+        title: Text(
+          'Fecha del pedido',
+          style: TextStyle(color: Colors.black),
+        ),
         subtitle: Text(
-            '${RelativeTimeUtil.getRelativeTime(con.order.timestamp ?? 0)}'),
+            '${RelativeTimeUtil.getRelativeTime(con.order.timestamp ?? 0)}',
+            style: TextStyle(color: Colors.black)),
         trailing: Icon(Icons.timer),
       ),
     );
@@ -94,13 +100,15 @@ class ClientOrdersDetailPage extends StatelessWidget {
             children: [
               Text(
                 product.name ?? '',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
               ),
               SizedBox(height: 7),
               Text(
                 'Cantidad: ${product.quantity}',
                 style: TextStyle(
                     // fontWeight: FontWeight.bold
+                    color: Colors.black,
                     fontSize: 13),
               ),
             ],
@@ -130,6 +138,12 @@ class ClientOrdersDetailPage extends StatelessWidget {
   }
 
   Widget _totalToPay(BuildContext context) {
+    double totalOrder = con.total.value;
+    double deliveryPrice =
+        con.order.deliveryPrice ?? 0.0;
+    double totalWithDelivery =
+        totalOrder + deliveryPrice;
+
     return Column(
       children: [
         Divider(height: 1, color: Colors.grey[300]),
@@ -142,30 +156,17 @@ class ClientOrdersDetailPage extends StatelessWidget {
                 : MainAxisAlignment.start,
             children: [
               Text(
-                'TOTAL: \$${con.total.value}',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                'TOTAL: \$${totalWithDelivery.toStringAsFixed(2)}',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                    color: Colors.black),
               ),
-              con.order.status == 'ENCAMINO'
-                  ? Container()
-                  : Container()
+              con.order.status == 'ENCAMINO' ? Container() : Container()
             ],
           ),
         )
       ],
-    );
-  }
-
-  Widget _buttonGoToOrderMap() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 30),
-      child: ElevatedButton(
-          onPressed: () => con.goToOrderMap(),
-          style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.all(15), backgroundColor: Colors.redAccent),
-          child: Text(
-            'RASTREAR PEDIDO',
-            style: TextStyle(color: Colors.white),
-          )),
     );
   }
 }

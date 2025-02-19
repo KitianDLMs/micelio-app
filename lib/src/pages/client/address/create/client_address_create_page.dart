@@ -1,20 +1,22 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:micelio/src/pages/client/address/create/client_address_create_controller.dart';
+
+import 'client_address_create_controller.dart';
 
 class ClientAddressCreatePage extends StatelessWidget {
-  ClientAddressCreateController con = Get.put(ClientAddressCreateController());
+  final ClientAddressCreateController con =
+      Get.put(ClientAddressCreateController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        // POSICIONAR ELEMENTOS UNO ENCIMA DEL OTRO
         children: [
           _backgroundCover(context),
           _boxForm(context),
           _textNewAddress(context),
-          _iconBack()
+          _iconBack(),
         ],
       ),
     );
@@ -23,13 +25,14 @@ class ClientAddressCreatePage extends StatelessWidget {
   Widget _iconBack() {
     return SafeArea(
       child: Container(
-        margin: EdgeInsets.only(left: 15),
+        margin: const EdgeInsets.only(left: 15),
         child: IconButton(
-            onPressed: () => Get.back(),
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 30,
-            )),
+          onPressed: () => Get.back(),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            size: 30,
+          ),
+        ),
       ),
     );
   }
@@ -44,63 +47,148 @@ class ClientAddressCreatePage extends StatelessWidget {
 
   Widget _boxForm(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.45,
+      height: MediaQuery.of(context).size.height * 0.55,
       margin: EdgeInsets.only(
-          top: MediaQuery.of(context).size.height * 0.3, left: 50, right: 50),
-      decoration: const BoxDecoration(color: Colors.white, boxShadow: <BoxShadow>[
-        BoxShadow(
-            color: Colors.black54, blurRadius: 15, offset: Offset(0, 0.75))
-      ]),
+        top: MediaQuery.of(context).size.height * 0.3,
+        left: 50,
+        right: 50,
+      ),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black54,
+            blurRadius: 15,
+            offset: Offset(0, 0.75),
+          )
+        ],
+      ),
       child: SingleChildScrollView(
         child: Column(
           children: [
             _textYourInfo(),
-            _textFieldAddress(),
-            _textFieldNeighborhood(),
-            _textFieldRefPoint(context),
-            SizedBox(height: 20),
-            _buttonCreate(context)
+            _neighborhoodDropdown(),
+            _streetDropdown(),
+            _numberDropdown(),
+            const SizedBox(height: 20),
+            _buttonCreate(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _textFieldAddress() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 40),
-      child: TextField(
-        controller: con.addressController,
-        keyboardType: TextInputType.text,
-        decoration: const InputDecoration(
-            hintText: 'Direccion', prefixIcon: Icon(Icons.location_on)),
+  Widget _numberDropdown() {
+    return Obx(
+      () => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+        child: DropdownButtonFormField<String>(
+          decoration: const InputDecoration(
+            labelText: 'Número',
+            prefixIcon: Icon(Icons.location_on),
+          ),
+          value: con.selectedNumero.value.isEmpty
+              ? null
+              : con.selectedNumero.value,
+          items: con.numeros.map<DropdownMenuItem<String>>((numero) {
+            return DropdownMenuItem<String>(
+              value: '$numero',
+              child: Text('$numero'),
+            );
+          }).toList(),
+          onChanged: con.onNumberSelected,
+        ),
       ),
     );
   }
 
-  Widget _textFieldNeighborhood() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 40),
-      child: TextField(
-        controller: con.neighborhoodController,
-        keyboardType: TextInputType.text,
-        decoration: InputDecoration(
-            hintText: 'Barrio', prefixIcon: Icon(Icons.location_city)),
+  // Widget _textFieldAddress() {
+  //   return Container(
+  //     margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+  //     child: TextField(
+  //       controller: con.addressController,
+  //       decoration: const InputDecoration(
+  //         labelText: 'Número',
+  //         prefixIcon: Icon(Icons.home),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Widget _neighborhoodDropdown() {
+    final ClientAddressCreateController con =
+        Get.find<ClientAddressCreateController>();
+
+    return Obx(
+      () => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+        child: DropdownButtonFormField<String>(
+          decoration: const InputDecoration(
+            labelText: 'Localidad',
+            prefixIcon: Icon(Icons.location_city),
+          ),
+          value: con.selectedNeighborhood.value.isEmpty
+              ? null
+              : con.selectedNeighborhood.value,
+          items:
+              con.neighborhoods.map<DropdownMenuItem<String>>((neighborhood) {
+            return DropdownMenuItem<String>(
+              value: neighborhood['name'],
+              child: Text(neighborhood['name'] ?? ''),
+            );
+          }).toList(),
+          onChanged: con.onNeighborhoodSelected,
+        ),
       ),
     );
   }
 
-  Widget _textFieldRefPoint(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 40),
-      child: TextField(
-        onTap: () => con.openGoogleMaps(context),
-        controller: con.refPointController,
-        autofocus: false,
-        focusNode: AlwaysDisabledFocusNode(),
-        keyboardType: TextInputType.text,
-        decoration: const InputDecoration(
-            hintText: 'Punto de referencia', prefixIcon: Icon(Icons.map)),
+  // Widget _streetDropdown() {
+  //   return Obx(
+  //     () => Container(
+  //       margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+  //       child: DropdownButtonFormField<String>(
+  //         decoration: const InputDecoration(
+  //           labelText: 'Calle',
+  //           prefixIcon: Icon(Icons.location_on),
+  //         ),
+  //         value: con.selectedStreet.value.isEmpty
+  //             ? null
+  //             : con.selectedStreet.value,
+  //         items: con.streets.map<DropdownMenuItem<String>>((street) {
+  //           return DropdownMenuItem<String>(
+  //             value: street,
+  //             child: Text(street),
+  //           );
+  //         }).toList(),
+  //         onChanged: (value) {
+  //           con.selectedStreet.value = value!;
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Widget _streetDropdown() {
+    return Obx(
+      () => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+        child: DropdownButtonFormField<String>(
+          decoration: const InputDecoration(
+            labelText: 'Calle',
+            prefixIcon: Icon(Icons.location_on),
+          ),
+          value: con.selectedStreet.value.isEmpty
+              ? null
+              : con.selectedStreet.value,
+          items: con.streets.map<DropdownMenuItem<String>>((street) {
+            return DropdownMenuItem<String>(
+              value: street,
+              child: Text(street),
+            );
+          }).toList(),
+          onChanged: con.onStreetSelected,
+        ),
       ),
     );
   }
@@ -108,30 +196,36 @@ class ClientAddressCreatePage extends StatelessWidget {
   Widget _buttonCreate(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
       child: ElevatedButton(
-          onPressed: () {
-            con.createAddress();
-          },
-          style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 15)),
-          child: const Text(
-            'CREAR DIRECCION',
-            style: TextStyle(color: Colors.black),
-          )),
+        onPressed: () {
+          con.createAddress();
+          print('Barrio: ${con.selectedNeighborhood.value}');
+          print('Calle: ${con.selectedStreet.value}');
+          print('Numero: ${con.selectedNumero.value}');
+          // print('Número: ${con.refPointController.text}');
+        },
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+        ),
+        child: const Text(
+          'CREAR DIRECCIÓN',
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
     );
   }
 
   Widget _textNewAddress(BuildContext context) {
     return SafeArea(
       child: Container(
-        margin: EdgeInsets.only(top: 15),
+        margin: const EdgeInsets.only(top: 15),
         alignment: Alignment.topCenter,
         child: const Column(
           children: [
             Icon(Icons.location_on, size: 100),
             Text(
-              'NUEVA DIRECCION',
+              'NUEVA DIRECCIÓN',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
             ),
           ],
@@ -144,16 +238,11 @@ class ClientAddressCreatePage extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 40, bottom: 30),
       child: const Text(
-        'INGRESA ESTA INFORMACION',
+        'INGRESA ESTA INFORMACIÓN',
         style: TextStyle(
           color: Colors.black,
         ),
       ),
     );
   }
-}
-
-class AlwaysDisabledFocusNode extends FocusNode {
-  @override
-  bool get hasFocus => false;
 }

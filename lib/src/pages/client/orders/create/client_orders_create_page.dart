@@ -22,7 +22,7 @@ class ClientOrdersCreatePage extends StatelessWidget {
               style: TextStyle(color: Colors.black),
             ),
           ),
-          body: con.selectedProducts.length > 0
+          body: con.selectedProducts.isNotEmpty
               ? ListView(
                   children: con.selectedProducts.map((Product product) {
                     return _cardProduct(product);
@@ -45,7 +45,7 @@ class ClientOrdersCreatePage extends StatelessWidget {
             children: [
               Text(
                 'TOTAL: \$${con.total.value}',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black),
               ),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 30),
@@ -77,7 +77,7 @@ class ClientOrdersCreatePage extends StatelessWidget {
             children: [
               Text(
                 product.name ?? '',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
               ),
               SizedBox(height: 7),
               _buttonsAddOrRemove(product)
@@ -124,13 +124,13 @@ class ClientOrdersCreatePage extends StatelessWidget {
                   topLeft: Radius.circular(8),
                   bottomLeft: Radius.circular(8),
                 )),
-            child: Text('-'),
+            child: Text('-', style: TextStyle(color: Colors.black),),
           ),
         ),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 7),
           color: Colors.grey[200],
-          child: Text('${product.quantity ?? 0}'),
+          child: Text('${product.quantity ?? 0}', style: TextStyle(color: Colors.black),),
         ),
         GestureDetector(
           onTap: () => con.addItem(product),
@@ -142,7 +142,7 @@ class ClientOrdersCreatePage extends StatelessWidget {
                   topRight: Radius.circular(8),
                   bottomRight: Radius.circular(8),
                 )),
-            child: Text('+'),
+            child: Text('+', style: TextStyle(color: Colors.black)),
           ),
         ),
       ],
@@ -152,8 +152,7 @@ class ClientOrdersCreatePage extends StatelessWidget {
   Widget _imageProduct(Product product) {
     return Container(
       height: 70,
-      width: 70,
-      // padding: EdgeInsets.all(2),
+      width: 70,      
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: FadeInImage(

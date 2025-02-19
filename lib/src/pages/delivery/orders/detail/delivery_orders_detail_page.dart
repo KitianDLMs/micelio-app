@@ -24,12 +24,13 @@ class _DeliveryOrdersDetailPageState extends State<DeliveryOrdersDetailPage> {
     return Obx(() => Scaffold(
       bottomNavigationBar: Container(
         color: Color.fromRGBO(245, 245, 245, 1),
-        height: MediaQuery.of(context).size.height * 0.4,
+        height: MediaQuery.of(context).size.height * 0.45,
         child: Column(
           children: [
             _dataDate(),
             _dataClient(),
             _dataAddress(),
+            _dataTrade(),
             _totalToPay(context),
           ],
         ),
@@ -59,8 +60,8 @@ class _DeliveryOrdersDetailPageState extends State<DeliveryOrdersDetailPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text('Cliente y Telefono'),
-        subtitle: Text('${con.order.user?.name ?? ''} ${con.order.user?.lastname ?? ''} - ${con.order.user?.phone ?? ''}'),
+        title: Text('Cliente y Telefono', style: TextStyle(color: Colors.black)),
+        subtitle: Text('${con.order.user?.name ?? ''} ${con.order.user?.lastname ?? ''} - ${con.order.user?.phone ?? ''}', style: TextStyle(color: Colors.black)),
         trailing: Icon(Icons.person),
       ),
     );
@@ -70,8 +71,8 @@ class _DeliveryOrdersDetailPageState extends State<DeliveryOrdersDetailPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text('Direccion de entrega'),
-        subtitle: Text(con.order.address?.address ?? ''),
+        title: Text('Direccion de entrega', style: TextStyle(color: Colors.black)),
+        subtitle: Text('${con.order.address?.neighborhood ?? ''} ${con.order.address?.address ?? ''} #${con.order.address!.number ?? ''}', style: TextStyle(color: Colors.black),),
         trailing: Icon(Icons.location_on),
       ),
     );
@@ -81,9 +82,20 @@ class _DeliveryOrdersDetailPageState extends State<DeliveryOrdersDetailPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text('Fecha del pedido'),
-        subtitle: Text('${RelativeTimeUtil.getRelativeTime(con.order.timestamp ?? 0)}'),
+        title: Text('Fecha del pedido', style: TextStyle(color: Colors.black)),
+        subtitle: Text(RelativeTimeUtil.getRelativeTime(con.order.timestamp ?? 0), style: TextStyle(color: Colors.black)),
         trailing: Icon(Icons.timer),
+      ),
+    );
+  }
+
+  Widget _dataTrade() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: ListTile(
+        title: Text('Retirar en', style: TextStyle(color: Colors.black)),
+        subtitle: Text(con.order.trade!.name!, style: TextStyle(color: Colors.black),),
+        trailing: Icon(Icons.task_rounded),
       ),
     );
   }
@@ -101,6 +113,7 @@ class _DeliveryOrdersDetailPageState extends State<DeliveryOrdersDetailPage> {
               Text(
                 product.name ?? '',
                 style: TextStyle(
+                  color: Colors.black,
                     fontWeight: FontWeight.bold
                 ),
               ),
@@ -108,7 +121,7 @@ class _DeliveryOrdersDetailPageState extends State<DeliveryOrdersDetailPage> {
               Text(
                 'Cantidad: ${product.quantity}',
                 style: TextStyle(
-                    // fontWeight: FontWeight.bold
+                  color: Colors.black,
                   fontSize: 13
                 ),
               ),
@@ -153,7 +166,8 @@ class _DeliveryOrdersDetailPageState extends State<DeliveryOrdersDetailPage> {
                 'TOTAL: \$${con.total.value}',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 17
+                    fontSize: 17,
+                    color: Colors.black
                 ),
               ),
               con.order.status.obs == 'DESPACHADO'

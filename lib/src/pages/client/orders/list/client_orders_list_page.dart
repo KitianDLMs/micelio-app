@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:micelio/src/models/order.dart';
 import 'package:micelio/src/pages/client/orders/list/client_orders_list_controller.dart';
 import 'package:micelio/src/pages/delivery/orders/list/delivery_orders_list_controller.dart';
@@ -12,7 +13,7 @@ import 'package:provider/provider.dart';
 
 class ClientOrdersListPage extends StatelessWidget {
   ClientOrdersListController con = Get.put(ClientOrdersListController());
-
+  var trade = GetStorage().read('trade');  
   @override
   Widget build(BuildContext context) {
     return Obx(() => DefaultTabController(
@@ -41,11 +42,13 @@ class ClientOrdersListPage extends StatelessWidget {
                       return FutureBuilder(
                         future: con.getOrders(status),
                         builder:
-                            (context, AsyncSnapshot<List<Order?>> snapshot) {
+                            (context, AsyncSnapshot<List<Order?>> snapshot, ) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const Center(
-                              child: CircularProgressIndicator(),
+                              child: CircularProgressIndicator(
+                                color: Colors.black,
+                              ),
                             );
                           }
 
@@ -53,17 +56,17 @@ class ClientOrdersListPage extends StatelessWidget {
                             return Center(
                               child: NoDataWidget(text: 'No hay pedidos'),
                             );
-                          }
-                          
-                          final userOrders = snapshot.data!.where((order) {
-                            return order?.clientId == con.userSession.id;
+                          }                
+                                    
+                          final userOrders = snapshot.data!.where((order) {                                                                              
+                            return order?.clientId == con.userSession.id && order!.tradeId == trade.id;
                           }).toList();
 
                           if (userOrders.isEmpty) {
                             return Center(
                               child: NoDataWidget(text: 'No hay pedidos'),
                             );
-                          }
+                          }                          
 
                           return ListView.builder(
                             itemCount: userOrders.length,
@@ -121,26 +124,33 @@ class ClientOrdersListPage extends StatelessWidget {
                 margin: EdgeInsets.only(top: 15, left: 20, right: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: [                    
                     Container(
                         width: double.infinity,
                         margin: EdgeInsets.only(top: 5),
                         alignment: Alignment.centerLeft,
                         child: Text(
-                            'Pedido: ${RelativeTimeUtil.getRelativeTime(order.timestamp ?? 0)}')),
+                            'Pedido: ${RelativeTimeUtil.getRelativeTime(order.timestamp ?? 0)}', style: TextStyle(color: Colors.black),)),
                     Container(
                       width: double.infinity,
                       margin: EdgeInsets.only(top: 5),
                       alignment: Alignment.centerLeft,
                       child: Text(
-                          'Repartidor: ${order.delivery?.name ?? 'No asignado'} ${order.delivery?.lastname ?? ''}'),
+                          'Repartidor: ${order.delivery?.name ?? 'No asignado'} ${order.delivery?.lastname ?? ''}', style: TextStyle(color: Colors.black)),
                     ),
                     Container(
                       width: double.infinity,
                       margin: EdgeInsets.only(top: 5),
                       alignment: Alignment.centerLeft,
                       child:
-                          Text('Entregar en: ${order.address?.address ?? ''}'),
+                          Text('Entregar en: ${order.address?.neighborhood ?? ''} ${order.address?.address ?? ''} #${order.address?.number ?? ''}', style: TextStyle(color: Colors.black)),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.only(top: 5),
+                      alignment: Alignment.centerLeft,
+                      child:
+                          Text('Delivery: \$${order.deliveryPrice ?? ''}', style: TextStyle(color: Colors.black)),
                     ),
                   ],
                 ),

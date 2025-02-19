@@ -16,6 +16,7 @@ class User {
   String? image;
   String? password;
   String? notification_token;
+  String? tradeId;  
   List<Rol>? roles = [];
   Address? address; // Nuevo campo para la dirección
 
@@ -28,6 +29,7 @@ class User {
     this.image,
     this.password,
     this.notification_token,
+    this.tradeId,
     this.roles,
     this.address,
   });
@@ -41,6 +43,7 @@ class User {
       image: json["image"],
       password: json["password"],
       notification_token: json["session_token"],
+      tradeId: json["tradeId"],      
       roles: json["roles"] != null && json["roles"] is List
           ? List<Rol>.from(json["roles"].map((role) => Rol.fromJson(role)))
           : [],
@@ -67,7 +70,8 @@ class User {
         "image": image,
         "password": password,
         "session_token": notification_token,
+        "tradeId": tradeId,
         "roles": roles != null ? roles!.map((role) => role.toJson()).toList() : [],
-        "address": address?.toJson(), // Serialización del objeto Address
+        "address": address?.toJson(),
       };
 }

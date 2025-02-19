@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:micelio/src/environment/environment.dart';
 import 'package:micelio/src/models/user.dart';
 import 'package:micelio/src/pages/client/home/client_home_page.dart';
+import 'package:micelio/src/pages/client/trade/trade_home_page.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:http/http.dart' as http;
 
@@ -45,7 +46,7 @@ class AppleSignInService {
           GetStorage().write('user', user);
           User myUser = User.fromJson(GetStorage().read('user') ?? {});
           if (myUser.id != null) {
-            Get.off(() => ClientHomePage());
+            Get.off(() => TradeHomePage());
           } else {
             Get.snackbar('Login fallido', 'error con Apple sign in');
           }

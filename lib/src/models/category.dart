@@ -7,17 +7,20 @@ String categoryToJson(Category data) => json.encode(data.toJson());
 class Category {
   String? id;
   String? name;
+  String? tradeId;  
   String? description;
 
   Category({
     this.id,
     this.name,
+    this.tradeId,
     this.description,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
         id: json["_id"], // Cambiado a "_id"
         name: json["name"],
+        tradeId: json['tradeId'],
         description: json["description"],
       );
 
@@ -28,6 +31,7 @@ class Category {
   Map<String, dynamic> toJson() => {
         "_id": id,
         "name": name,
+        "tradeId": tradeId,        
         "description": description,
       };
 }

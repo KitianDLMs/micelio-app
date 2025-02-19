@@ -14,15 +14,13 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
 
   RestaurantOrdersDetailController con = Get.put(RestaurantOrdersDetailController());
   @override
-  Widget build(BuildContext context) {
-    
+  Widget build(BuildContext context) {  
     return Obx(() => Scaffold(
           bottomNavigationBar: Container(
             color: Color.fromRGBO(245, 245, 245, 1),
             height: con.order.status == 'PAGADO'
                 ? MediaQuery.of(context).size.height * 0.50
                 : MediaQuery.of(context).size.height * 0.45,
-            // padding: EdgeInsets.only(top: 5),
             child: Column(
               children: [
                 _dataDate(),
@@ -67,9 +65,9 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text('Cliente y Telefono'),
+        title: Text('Cliente y Telefono', style: TextStyle(color: Colors.black)),
         subtitle: Text(
-            '${con.order.user?.name ?? ''} ${con.order.user?.lastname ?? ''} - ${con.order.user?.phone ?? ''}'),
+            '${con.order.user?.name ?? ''} ${con.order.user?.lastname ?? ''} - ${con.order.user?.phone ?? ''}', style: TextStyle(color: Colors.black)),
         trailing: Icon(Icons.person),
       ),
     );
@@ -80,9 +78,9 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
         ? Container(
             margin: EdgeInsets.symmetric(horizontal: 20),
             child: ListTile(
-              title: Text('Repartidor asignado'),
+              title: Text('Repartidor asignado', style: TextStyle(color: Colors.black)),
               subtitle: Text(
-                  '${con.order.delivery?.name ?? ''} ${con.order.delivery?.lastname ?? ''} - ${con.order.delivery?.phone ?? ''}'),
+                  '${con.order.delivery?.name ?? ''} ${con.order.delivery?.lastname ?? ''} - ${con.order.delivery?.phone ?? ''}', style: TextStyle(color: Colors.black)),
               trailing: Icon(Icons.delivery_dining),
             ),
           )
@@ -93,8 +91,8 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text('Direccion de entrega'),
-        subtitle: Text(con.order.address?.address ?? ''),
+        title: Text('Direccion de entrega', style: TextStyle(color: Colors.black)),
+        subtitle: Text('${con.order.address?.neighborhood ?? ''} ${con.order.address?.address ?? ''} #${con.order.address?.number ?? ''}', style: TextStyle(color: Colors.black)),
         trailing: Icon(Icons.location_on),
       ),
     );
@@ -104,9 +102,9 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text('Fecha del pedido'),
+        title: Text('Fecha del pedido', style: TextStyle(color: Colors.black)),
         subtitle: Text(
-            '${RelativeTimeUtil.getRelativeTime(con.order.timestamp ?? 0)}'),
+            RelativeTimeUtil.getRelativeTime(con.order.timestamp ?? 0), style: TextStyle(color: Colors.black)),
         trailing: Icon(Icons.timer),
       ),
     );
@@ -124,13 +122,13 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
             children: [
               Text(
                 product.name ?? '',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
               ),
               SizedBox(height: 7),
               Text(
                 'Cantidad: ${product.quantity}',
                 style: TextStyle(
-                    // fontWeight: FontWeight.bold
+                    color: Colors.black,
                     fontSize: 13),
               ),
             ],
@@ -140,11 +138,10 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _imageProduct(Product product) {
+  Widget _imageProduct(Product product) {    
     return Container(
       height: 50,
-      width: 50,
-      // padding: EdgeInsets.all(2),
+      width: 50,      
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: FadeInImage(
@@ -188,7 +185,7 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
             children: [
               Text(
                 'TOTAL: \$${con.total.value}',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black),
               ),
               con.order.status == 'PAGADO'
                   ? Container(

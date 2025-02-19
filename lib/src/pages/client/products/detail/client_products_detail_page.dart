@@ -17,7 +17,7 @@ class ClientProductsDetailPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     con.checkIfProductsWasAdded(product!, price, counter);  
     return Obx(() => Scaffold(
           bottomNavigationBar: Container(
@@ -55,27 +55,31 @@ class ClientProductsDetailPage extends StatelessWidget {
         product?.description ?? '',
         style: TextStyle(
           fontSize: 16,
+          color: Colors.black
         ),
       ),
     );
   }
 
   Widget _buttonsAddToBag() {
+    bool isProductAvailable = product != null && (product!.stock ?? 0) > 0;
+
     return Column(
       children: [
         Divider(height: 1, color: Colors.grey[400]),
-          Container(
+        Container(
           margin: EdgeInsets.only(left: 20, right: 20, top: 25),
           child: Row(
             children: [
               ElevatedButton(
-                onPressed: () => con.removeItem(product!, price, counter),
+                onPressed: isProductAvailable ? () => con.removeItem(product!, price, counter) : null,
                 child: Text(
                   '-',
                   style: TextStyle(color: Colors.black, fontSize: 22),
                 ),
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
+                    disabledBackgroundColor: Colors.grey,
                     minimumSize: Size(20, 37),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
@@ -84,7 +88,7 @@ class ClientProductsDetailPage extends StatelessWidget {
                     ))),
               ),
               Obx(() => ElevatedButton(
-                    onPressed: () {},
+                    onPressed: null, // El botón de cantidad solo muestra el valor
                     child: Text(
                       '${counter.value}',
                       style: TextStyle(color: Colors.black, fontSize: 18),
@@ -95,13 +99,14 @@ class ClientProductsDetailPage extends StatelessWidget {
                     ),
                   )),
               ElevatedButton(
-                onPressed: () => con.addItem(product!, price, counter),
+                onPressed: isProductAvailable ? () => con.addItem(product!, price, counter) : null,
                 child: Text(
                   '+',
                   style: TextStyle(color: Colors.black, fontSize: 22),
                 ),
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
+                    disabledBackgroundColor: Colors.grey,
                     minimumSize: Size(37, 37),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
@@ -111,10 +116,12 @@ class ClientProductsDetailPage extends StatelessWidget {
               ),
               Spacer(),
               ElevatedButton(
-                onPressed: () => {
-                  con.addToBag(product!, price, counter),
-                  counter.value = 0,
-                },
+                onPressed: isProductAvailable
+                    ? () {
+                        con.addToBag(product!, counter);
+                        counter.value = 0;
+                      }
+                    : null,
                 child: Text(
                   'Agregar   \$${price.value}',
                   style: TextStyle(
@@ -124,6 +131,7 @@ class ClientProductsDetailPage extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,
+                  disabledBackgroundColor: Colors.grey,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25),
                   ),
@@ -149,7 +157,9 @@ class ClientProductsDetailPage extends StatelessWidget {
   }
 
   Widget _imageSlideshow(BuildContext context) {
-    return ImageSlideshow(
+  return Stack(
+    children: [
+      ImageSlideshow(
         width: double.infinity,
         height: MediaQuery.of(context).size.height * 0.4,
         initialPage: 0,
@@ -157,12 +167,51 @@ class ClientProductsDetailPage extends StatelessWidget {
         indicatorBackgroundColor: Colors.grey,
         children: [
           FadeInImage(
-              fit: BoxFit.cover,
-              fadeInDuration: Duration(milliseconds: 50),
-              placeholder: AssetImage('assets/img/no-image.png'),
-              image: product!.image1 != null
-                  ? NetworkImage(product!.image1!)
-                  : AssetImage('assets/img/no-image.png') as ImageProvider),
-        ]);
-  }
+            fit: BoxFit.cover,
+            fadeInDuration: Duration(milliseconds: 50),
+            placeholder: AssetImage('assets/img/no-image.png'),
+            image: product!.image1 != null
+                ? NetworkImage(product!.image1!)
+                : AssetImage('assets/img/no-image.png') as ImageProvider,
+          ),
+        ],
+      ),
+      if (product?.stock == 0) // Mostrar solo si no hay stock
+        Positioned.fill(
+          child: Container(
+            color: Colors.black.withOpacity(0.5), // Oscurecer imagen
+            child: Center(
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Transform.rotate(
+                    angle: -0.2, // Inclinación de la línea
+                    child: Container(
+                      width: 250,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'SIN STOCK',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+    ],
+  );
+}
+
 }

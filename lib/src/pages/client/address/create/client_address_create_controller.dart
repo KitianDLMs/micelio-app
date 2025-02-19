@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,7 +17,19 @@ import 'package:micelio/src/providers/address_provider.dart';
 class ClientAddressCreateController extends GetxController {
   TextEditingController addressController = TextEditingController();
   TextEditingController neighborhoodController = TextEditingController();
-  TextEditingController refPointController = TextEditingController();
+  TextEditingController numberController = TextEditingController();
+  var neighborhoods = [].obs;
+  var streets = [].obs;
+  var selectedNeighborhood = ''.obs;
+  var selectedStreet = ''.obs;
+  var numeros = [].obs;
+  var selectedNumero = ''.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadNeighborhoods();
+  }
 
   double latRefPoint = 0;
   double lngRefPoint = 0;
@@ -38,16 +53,42 @@ class ClientAddressCreateController extends GetxController {
     // lngRefPoint = refPointMap['lng'];
   }
 
+  Future<void> loadNeighborhoods() async {
+    String jsonString =
+        await rootBundle.loadString('assets/neighborhoods.json');
+    Map<String, dynamic> data = jsonDecode(jsonString);
+    neighborhoods.value = data['neighborhoods'];
+  }
+
+  void onNeighborhoodSelected(String? value) {
+    selectedNeighborhood.value = value!;
+    neighborhoodController.text = value;
+    streets.value = neighborhoods
+        .firstWhere((neighborhood) => neighborhood['name'] == value)['streets'];
+    numeros.value = neighborhoods
+        .firstWhere((neighborhood) => neighborhood['name'] == value)['numero'];
+    selectedStreet.value = '';
+    selectedNumero.value = '';
+  }
+
+  void onStreetSelected(String? value) {
+    selectedStreet.value = value!;
+  }
+
+  void onNumberSelected(String? value) {
+    selectedNumero.value = value!;
+    numberController.text = value; // Actualizar el campo de texto
+  }
+
   void createAddress() async {
-    String addressName = addressController.text;
+    String addressName = selectedStreet.value;
     String neighborhood = neighborhoodController.text;
-    print('userid createaddress${user}');
+    String numero = numberController.text;
     if (isValidForm(addressName, neighborhood)) {
       Address address = Address(
           address: addressName,
           neighborhood: neighborhood,
-          // lat: latRefPoint,
-          // lng: lngRefPoint,
+          number: selectedNumero.value,
           idUser: user.id);
 
       ResponseApi responseApi = await addressProvider.create(address);

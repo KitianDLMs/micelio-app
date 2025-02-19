@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:micelio/src/environment/environment.dart';
 import 'package:micelio/src/models/product.dart';
 import 'package:http/http.dart' as http;
+import 'package:micelio/src/models/response_api.dart';
 import 'package:micelio/src/models/user.dart';
 import 'package:path/path.dart';
 
@@ -68,5 +69,27 @@ class ProductsProvider extends GetConnect {
     request.fields['product'] = json.encode(product);
     final response = await request.send();
     return response.stream.transform(utf8.decoder);
+  }
+
+  Future<ResponseApi> update(Product product) async {
+    Response response =
+        await put('$url/update/${product.id}', product.toJson(), headers: {
+      'Content-Type': 'application/json',
+      // 'Authorization': userSession.sessionToken ?? ''
+    }); // ESPERAR HASTA QUE EL SERVIDOR NOS RETORNE LA RESPUESTA
+    print(response.body);
+    if (response.body == null) {
+      Get.snackbar('Error', 'No se pudo actualizar la informacion');
+      return ResponseApi();
+    }
+
+    if (response.statusCode == 401) {
+      Get.snackbar('Error', 'No estas autorizado para realizar esta peticion');
+      return ResponseApi();
+    }
+
+    ResponseApi responseApi = ResponseApi.fromJson(response.body['data']);
+
+    return responseApi;
   }
 }

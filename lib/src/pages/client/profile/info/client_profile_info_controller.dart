@@ -38,6 +38,7 @@ class ClientProfileInfoController extends GetxController {
 
   void signOut(BuildContext context) {  
     GetStorage().remove('user');    
+    GetStorage().remove('trade');
     GetStorage().remove('address');
     GetStorage().remove('shopping_bag');        
     Get.off(() => ClientHomeTutorialPage());
@@ -63,6 +64,10 @@ class ClientProfileInfoController extends GetxController {
 
   void goToRoles() {
     Get.offNamedUntil('/roles', (route) => false);
+  }
+
+  void goToTrade() {
+    Get.offNamedUntil('/trade', (route) => false);
   }
 
   void showAlertDialog(BuildContext context) {

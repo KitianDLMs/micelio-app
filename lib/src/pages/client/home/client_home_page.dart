@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:micelio/src/models/trade..dart';
 import 'package:micelio/src/models/user.dart';
 import 'package:micelio/src/pages/client/orders/list/client_orders_list_page.dart';
 import 'package:micelio/src/pages/client/profile/info/client_profile_info_page.dart';
 import 'package:micelio/src/pages/client/home/client_home_controller.dart';
 import 'package:micelio/src/pages/client/products/list/client_products_list_page.dart';
+import 'package:micelio/src/pages/client/trade/home/client_home_trade_page.dart';
 import 'package:micelio/src/providers/noti_service.dart';
 import 'package:micelio/src/providers/socket_service.dart';
 import 'package:micelio/src/utils/custom_animated_bottom_bar.dart';
@@ -20,35 +23,39 @@ class ClientHomePage extends StatefulWidget {
 
 class _ClientHomePageState extends State<ClientHomePage> {
   ClientHomeController con = Get.put(ClientHomeController());
-  User userSession = User.fromJson(GetStorage().read('user') ?? {});  
+  User userSession = User.fromJson(GetStorage().read('user') ?? {});
+  var trade = GetStorage().read('trade');
 
   @override
   void initState() {
     super.initState();
-    final socketService = Provider.of<SocketService>(context, listen: false);    
+    final socketService = Provider.of<SocketService>(context, listen: false);
     socketService.connect();
+    socketService.socket.on('pedido-asignado', _pedidoAsignado);
     socketService.socket.on('pedido-iniciado', _pedidoIniciado);
-    socketService.socket.on('pedido-entregado', _pedidoEntregado);    
+    socketService.socket.on('pedido-entregado', _pedidoEntregado);
+  }
+
+  void _pedidoAsignado(dynamic data) {
+    NotiService().showNotification(
+        id: 200, title: '¡Se asigno un repartidor!', body: 'Pedido asignado, ¡ya casi!');
+    setState(() {});
   }
 
   void _pedidoIniciado(dynamic data) {
     NotiService().showNotification(
-      id: 200, 
-      title: '¡En camino!', 
-      body: 'Pedido en camino, ¡preparate!'
-    );
+        id: 200, title: '¡En camino!', body: 'Pedido en camino, ¡preparate!');
     setState(() {});
-  }  
+  }
 
   void _pedidoEntregado(dynamic data) {
     NotiService().showNotification(
-      id: 200, 
-      title: 'Pedido entregado!', 
-      body: 'Se entrego tu pedido, ¡disfrutalo!'
-    );
+        id: 200,
+        title: 'Pedido entregado!',
+        body: 'Se entrego tu pedido, ¡disfrutalo!');
     setState(() {});
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -60,12 +67,14 @@ class _ClientHomePageState extends State<ClientHomePage> {
           body: Obx(() => IndexedStack(
                 index: con.indexTab.value,
                 children: [
+                  ClientHomeTradePage(),
                   ClientProductsListPage(),
                   ClientOrdersListPage(),
-                  ClientProfileInfoPage()
+                  ClientProfileInfoPage(),
                 ],
               )),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           floatingActionButton: _socialMediaIcons()),
     );
   }
@@ -81,10 +90,15 @@ class _ClientHomePageState extends State<ClientHomePage> {
           onItemSelected: (index) => con.changeTab(index),
           items: [
             BottomNavyBarItem(
+                icon: Icon(Icons.store),
+                title: Text('Tienda'),
+                activeColor: Colors.white,
+                inactiveColor: Colors.black),
+            BottomNavyBarItem(
                 icon: Icon(Icons.apps),
                 title: Text('Productos'),
                 activeColor: Colors.white,
-                inactiveColor: Colors.black),
+                inactiveColor: Colors.black),            
             BottomNavyBarItem(
                 icon: Icon(Icons.list),
                 title: Text('Pedidos'),
@@ -101,17 +115,21 @@ class _ClientHomePageState extends State<ClientHomePage> {
 
   Widget _socialMediaIcons() {
     var fbMic =
-        Uri.parse('https://www.facebook.com/profile.php?id=100011652091695');
+        Uri.parse('${trade.tradeFacebook ?? ''}');
     var igMic =
-        Uri.parse('https://www.instagram.com/micelio_pizzasysandwichs/');
-    var wsMic = Uri.parse('https://wa.me/56990959383');
+        Uri.parse('${trade.tradeInstagram ?? ''}');
+    var wsMic = Uri.parse('${trade.tradeWsp ?? ''}');
     return Container(
       padding: EdgeInsets.symmetric(
-          vertical: 10, horizontal: 20), // Agrega padding horizontal
+          vertical: 10, horizontal: 20),
       child: Row(
         mainAxisAlignment:
-            MainAxisAlignment.spaceBetween, // Distribuye los íconos
+            MainAxisAlignment.spaceBetween,
         children: [
+          _animatedImageButton(
+            imagePath: '${trade.image}',
+            onPressed: () => con.goToTrade()
+          ),
           _animatedIconButton(
             icon: FontAwesome.facebook,
             color: Colors.blue,
@@ -134,6 +152,57 @@ class _ClientHomePageState extends State<ClientHomePage> {
 
   Future<void> _launchUrl(Uri url) async {
     await launchUrl(url);
+  }
+
+  Widget _animatedImageButton({
+    required String imagePath,
+    required VoidCallback onPressed,
+  }) {
+    double _scale = 1.0;
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return GestureDetector(
+          onTapDown: (_) {
+            setState(() => _scale = 0.9);
+          },
+          onTapUp: (_) {
+            setState(() => _scale = 1.0);
+            onPressed();
+          },
+          onTapCancel: () {
+            setState(() => _scale = 1.0);
+          },
+          child: AnimatedScale(
+            scale: _scale,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                imagePath,
+                width: 38,
+                height: 38,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(
+                    Icons.error,
+                    size: 40,
+                    color: Colors.red,
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Widget _animatedIconButton({

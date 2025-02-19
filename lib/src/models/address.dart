@@ -8,6 +8,7 @@ class Address {
   String? id;
   String? address;
   String? neighborhood;
+  String? number; 
   String? idUser;
   double? lat;
   double? lng;
@@ -18,6 +19,7 @@ class Address {
     this.id,
     this.address,
     this.neighborhood,
+    this.number,
     this.idUser,
     this.lat,
     this.lng,
@@ -29,6 +31,7 @@ class Address {
         id: json["_id"] ?? json["id"], // Manejo de _id
         address: json["address"],
         neighborhood: json["neighborhood"],
+        number: json["number"], 
         idUser: json["id_user"],
         lat: json["lat"],
         lng: json["lng"],
@@ -40,6 +43,7 @@ class Address {
         "id": id,
         "address": address,
         "neighborhood": neighborhood,
+        "number": number,
         "id_user": idUser,
         "lat": lat,
         "lng": lng,

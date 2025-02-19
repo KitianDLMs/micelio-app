@@ -14,9 +14,10 @@ class MercadopagoProvider extends GetConnect {
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
   final bag = GetStorage().read('shopping_bag');
+  final trade = GetStorage().read('trade');
 
   Future<Response> create(dynamic bag) async {
-    Response response = await post('$url', bag, headers: {
+    Response response = await post('$url', bag, headers: {      
       'Content-Type': 'application/json'
     });
     return response;

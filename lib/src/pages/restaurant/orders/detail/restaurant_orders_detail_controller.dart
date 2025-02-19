@@ -30,28 +30,27 @@ class RestaurantOrdersDetailController extends GetxController {
   void updateOrder(context) async {
     final socketService = Provider.of<SocketService>(context, listen: false);             
     if (idDelivery.value != '') {
-      order.deliveryId = idDelivery.value;
-      
+      order.deliveryId = idDelivery.value;      
       ResponseApi responseApi = await ordersProvider.updateToDispatched(order);
-      if (responseApi.success == true) {        
+      if (responseApi.success == true) {
         socketService.socket.emit('pedido-asignado', {
           'de': user.id,
           'para': order.deliveryId,
           'nombre': '¡Pedido asignado!',
-          'mensaje': 'se te ha asignado un pedido, revisalo',          
-        }); 
+          'mensaje': 'se te ha asignado un pedido, revisalo',
+        });
+        socketService.socket.emit('pedido-asignado', {
+          'de': user.id,
+          'para': order.clientId,
+          'nombre': '¡Pedido asignado!',
+          'mensaje': 'se asignado un repartidor, ya casi',
+        });
         Get.offNamedUntil('/restaurant/home', (route) => false);
       } else {}
     } else {
       Get.snackbar('Petición denegada', 'Debes asignar el repartidor');
     }
   }
-
-  // Future<void> updateOrderInStorage(Order order) async {
-  //   final storage = GetStorage();
-  //   storage.write('order', order.toJson());
-  //   // print('Orden actualizada en GetStorage');
-  // }
 
   void getDeliveryMen() async {
     var result = await usersProvider.findDeliveryMen();

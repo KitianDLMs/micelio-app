@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 class Logo extends StatelessWidget {
 
-  // final String? titulo;
+  final String? titulo;
 
   const Logo({
     Key? key, 
-    // @required this.titulo
+    @required this.titulo
   }) : super(key: key);
 
   
@@ -20,11 +20,11 @@ class Logo extends StatelessWidget {
         child: Column(
           children: <Widget>[
 
-            Image( image: AssetImage('assets/img/logo_micelio_polera.png') ),
-            // SizedBox( height: 20 ),
-            // Text( 
-            //   this.titulo!, 
-            //   style: TextStyle(fontSize: 30 ))
+            Image( image: AssetImage('assets/img/repartidor.png') ),
+            SizedBox( height: 20 ),
+            Text( 
+              this.titulo!,
+              style: TextStyle(fontSize: 20 ))
 
           ],
         ),

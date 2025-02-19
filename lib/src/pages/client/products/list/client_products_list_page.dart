@@ -1,5 +1,7 @@
+import 'package:get_storage/get_storage.dart';
 import 'package:micelio/src/models/category.dart';
 import 'package:micelio/src/models/product.dart';
+import 'package:micelio/src/models/trade..dart';
 import 'package:micelio/src/providers/noti_service.dart';
 import 'package:micelio/src/widgets/no_data_widget.dart';
 import 'package:flutter/material.dart';
@@ -12,12 +14,14 @@ class ClientProductsListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {    
+  final trade = GetStorage().read('trade');
     return Obx(() {
       if (con.isLoading.value) {
         return const Scaffold(
           body: Center(
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+              color: Colors.black,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
             ),
           ),
         );
@@ -61,6 +65,7 @@ class ClientProductsListPage extends StatelessWidget {
                       return ListView.builder(
                         itemCount: snapshot.data?.length ?? 0,
                         itemBuilder: (_, index) {
+                          print(snapshot.data![index].stock == 0);
                           return _cardProduct(context, snapshot.data![index]);
                         },
                       );
@@ -70,7 +75,8 @@ class ClientProductsListPage extends StatelessWidget {
                   } else {
                     return Center(
                       child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+                        color: Colors.black,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                       ),
                     );
                   }
@@ -164,59 +170,78 @@ class ClientProductsListPage extends StatelessWidget {
   }
 
   Widget _cardProduct(BuildContext context, Product product) {
-    return GestureDetector(
-      onTap: () => con.openBottomSheet(context, product),
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 15, left: 20, right: 20),
-            child: ListTile(
-              title: Text(product.name ?? ''),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 5),
-                  Text(
-                    product.description ?? '',
-                    maxLines: 2,
-                    style: TextStyle(fontSize: 13),
-                  ),
-                  SizedBox(height: 15),
-                  Text(
-                    '\$${product.price.toString()}',
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 20),
-                ],
-              ),
-              trailing: Container(
-                height: 70,
-                width: 60,
-                // padding: EdgeInsets.all(2),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: FadeInImage(
-                    image: product.image1 != null
-                        ? NetworkImage(product.image1!)
-                        : AssetImage('assets/img/no-image.png')
-                            as ImageProvider,
-                    fit: BoxFit.cover,
-                    fadeInDuration: Duration(milliseconds: 50),
-                    placeholder: AssetImage('assets/img/no-image.png'),
-                  ),
+  return GestureDetector(
+    onTap: () => con.openBottomSheet(context, product),
+    child: Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 15, left: 20, right: 20),
+          child: ListTile(
+            title: Text(
+              product.name ?? '',
+              style: TextStyle(color: Colors.black),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 5),
+                Text(
+                  '${product.description ?? ''}',
+                  maxLines: 2,
+                  style: TextStyle(fontSize: 13, color: Colors.black),
                 ),
+                SizedBox(height: 15),
+                Text(
+                  '\$${product.price.toString()}',
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
+            trailing: Container(
+              height: 70,
+              width: 60,
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: FadeInImage(
+                      image: product.image1 != null
+                          ? NetworkImage(product.image1!)
+                          : AssetImage('assets/img/no-image.png')
+                              as ImageProvider,
+                      fit: BoxFit.cover,
+                      fadeInDuration: Duration(milliseconds: 50),
+                      placeholder: AssetImage('assets/img/no-image.png'),
+                    ),
+                  ),
+                  if (product.stock == 0) // Si el stock es 0, mostramos la capa roja
+                    Positioned.fill(
+                      child: Container(
+                        color: Colors.red.withOpacity(0.5), // Rojo semi-transparente
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.block, // Ícono de "No disponible"
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
-          Divider(
-            height: 1,
-            color: Colors.grey[300],
-            indent: 37,
-            endIndent: 37,
-          )
-        ],
-      ),
-    );
-  }
+        ),
+        Divider(
+          height: 1,
+          color: Colors.grey[300],
+          indent: 37,
+          endIndent: 37,
+        )
+      ],
+    ),
+  );
+}
+
 }

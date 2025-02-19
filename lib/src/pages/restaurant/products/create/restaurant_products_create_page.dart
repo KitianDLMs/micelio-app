@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:micelio/src/models/category.dart';
 import 'package:micelio/src/pages/restaurant/categories/create/restaurant_categories_create_controller.dart';
 import 'package:micelio/src/pages/restaurant/products/create/restaurant_products_create_controller.dart';
@@ -34,7 +36,8 @@ class _RestaurantProductsCreatePageState
   @override
   void initState() {
     setState(() {
-      con.getCategories();
+      var user = GetStorage().read('user');      
+      con.getCategories(user['tradeId']);
     });
     super.initState();
   }
@@ -61,25 +64,26 @@ class _RestaurantProductsCreatePageState
           children: [
             _textYourInfo(),
             _textFieldName(),
-            _textFieldDescription(),
             _textFieldPrice(),
+            _textFieldStock(),
+            _textFieldDescription(),
             _dropDownCategories(con.categories),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GetBuilder<RestaurantProductsCreateController>(
-                      builder: (value) =>
-                          _cardImage(context, con.imageFile1, 1)),
-                  // GetBuilder<RestaurantProductsCreateController>(
-                  //     builder: (value) =>
-                  //         _cardImage(context, con.imageFile2, 2)),
-                  // GetBuilder<RestaurantProductsCreateController>(
-                  //     builder: (value) =>
-                  //         _cardImage(context, con.imageFile3, 3)),
-                ],
-              ),
-            ),
+            // Container(
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       GetBuilder<RestaurantProductsCreateController>(
+            //           builder: (value) =>
+            //               _cardImage(context, con.imageFile1, 1)),
+            //       // GetBuilder<RestaurantProductsCreateController>(
+            //       //     builder: (value) =>
+            //       //         _cardImage(context, con.imageFile2, 2)),
+            //       // GetBuilder<RestaurantProductsCreateController>(
+            //       //     builder: (value) =>
+            //       //         _cardImage(context, con.imageFile3, 3)),
+            //     ],
+            //   ),
+            // ),
             _buttonCreate(context),
             _buttonReload(context)
           ],
@@ -160,16 +164,38 @@ class _RestaurantProductsCreatePageState
   }
 
   Widget _textFieldPrice() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 30),
-      child: TextField(
-        controller: con.priceController,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-            hintText: 'Precio', prefixIcon: Icon(Icons.attach_money)),
+  return Container(
+    margin: EdgeInsets.symmetric(horizontal: 30),
+    child: TextField(
+      controller: con.priceController,
+      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}$')),
+      ],
+      decoration: InputDecoration(
+        hintText: 'Precio',
+        prefixIcon: Icon(Icons.attach_money),
       ),
-    );
-  }
+    ),
+  );
+}
+
+Widget _textFieldStock() {
+  return Container(
+    margin: EdgeInsets.symmetric(horizontal: 30),
+    child: TextField(
+      controller: con.stockController,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
+      decoration: InputDecoration(
+        hintText: 'Stock',
+        prefixIcon: Icon(Icons.numbers),
+      ),
+    ),
+  );
+}
 
   Widget _textFieldDescription() {
     return Container(
@@ -205,12 +231,13 @@ class _RestaurantProductsCreatePageState
   }
 
   Widget _buttonReload(BuildContext context) {
+    var trade = GetStorage().read('trade');
     return Container(
       width: double.infinity,
       margin: EdgeInsets.only(left: 30, right: 30, top: 18),
       child: ElevatedButton(
           onPressed: () {
-            con.getCategories();
+            con.getCategories(trade.id);
           },
           style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(vertical: 15)),
@@ -221,7 +248,7 @@ class _RestaurantProductsCreatePageState
     );
   }
 
-  Widget _textNewCategory(BuildContext context) {
+  Widget _textNewCategory(BuildContext context) {    
     return SafeArea(
       child: Container(
         margin: EdgeInsets.only(top: 25),

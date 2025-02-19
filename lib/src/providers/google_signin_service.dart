@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:micelio/src/models/user.dart';
 import 'package:micelio/src/pages/client/home/client_home_page.dart';
+import 'package:micelio/src/pages/client/trade/trade_home_page.dart';
 
 class GoogleSignInService {
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -30,7 +31,7 @@ class GoogleSignInService {
       GetStorage().write('user', user);
       User myUser = User.fromJson(GetStorage().read('user') ?? {});            
       if (myUser.id != null) {
-        Get.off(() => ClientHomePage());
+        Get.off(() => TradeHomePage());
       } else {
         Get.snackbar('Login fallido', 'error con el Google sign in');
       }

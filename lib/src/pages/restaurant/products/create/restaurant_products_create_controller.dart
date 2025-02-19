@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:micelio/src/models/user.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import 'package:micelio/src/models/category.dart';
 import 'package:micelio/src/models/product.dart';
@@ -16,7 +18,9 @@ class RestaurantProductsCreateController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  TextEditingController stockController = TextEditingController();
   CategoriesProvider categoriesProvider = CategoriesProvider();
+  User user = User.fromJson(GetStorage().read('user') ?? {});
 
   ImagePicker picker = ImagePicker();
   File? imageFile1;
@@ -27,12 +31,12 @@ class RestaurantProductsCreateController extends GetxController {
   List<Category> categories = <Category>[].obs;
   ProductsProvider productsProvider = ProductsProvider();
 
-  RestaurantProductsCreateController() {
-    getCategories();
-  }
+  // RestaurantProductsCreateController() {        
+  //   getCategories(trade);
+  // }
 
-  void getCategories() async {
-    var result = await categoriesProvider.getAll();
+  void getCategories(String id) async {    
+    var result = await categoriesProvider.getAllByTrade(id);
     categories.clear();
     categories.addAll(result);
   }
@@ -41,13 +45,16 @@ class RestaurantProductsCreateController extends GetxController {
     String name = nameController.text;
     String description = descriptionController.text;
     String price = priceController.text;
+    String stock = stockController.text;
     ProgressDialog progressDialog = ProgressDialog(context: context);
 
     if (isValidForm(name, description, price)) {
       Product product = Product(
           name: name,
+          tradeId: user.tradeId,
           description: description,
           price: double.parse(price),
+          stock: int.parse(stock),
           idCategory: idCategory.value);
       progressDialog.show(max: 100, msg: 'Espere un momento...');
 

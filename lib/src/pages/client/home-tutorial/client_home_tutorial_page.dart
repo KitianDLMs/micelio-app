@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:micelio/src/environment/environment.dart';
 import 'package:micelio/src/providers/apple_signin_service.dart';
-import 'package:micelio/src/providers/blocs/notifications/notifications_bloc.dart';
 import 'package:micelio/src/providers/google_signin_service.dart';
-import 'package:micelio/src/providers/preferences/pref_usuarios.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -42,7 +39,7 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
           children: [
             _buildFirstTutorialPage(
               context,
-              title: "¡Bienvenido a Micelio!",
+              title: "¡Pedidos Huertos!",
               description: "(para realizar compras debes iniciar sesión)",
               image: Icons.motorcycle,
             ),
@@ -71,42 +68,52 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _currentPage > 0
-                      ? ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 240, 240,
-                                240), // Fondo igual al segundo botón
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10), // Ajuste de padding
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  8), // Bordes redondeados
-                            ),
-                          ),
-                          onPressed: () {
+                      ?                        
+                        ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(
+                            255, 240, 240, 240),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () {
                             _pageController.previousPage(
                               duration: Duration(milliseconds: 300),
                               curve: Curves.easeInOut,
                             );
                           },
-                          child: Text("Atrás",
-                              style: TextStyle(color: Colors.black)),
-                        )
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Atrás",
+                            style: TextStyle(
+                              color: Colors
+                                  .black,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                       : SizedBox.shrink(),
                   if (_currentPage < 2)
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(
-                            255, 240, 240, 240), // Fondo igual al segundo botón
+                            255, 240, 240, 240),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10), // Ajuste de padding
+                            horizontal: 16, vertical: 10),
                         shape: RoundedRectangleBorder(
                           borderRadius:
-                              BorderRadius.circular(8), // Bordes redondeados
+                              BorderRadius.circular(8),
                         ),
                       ),
-                      onPressed: () {
-                        // Acción del segundo botón
+                      onPressed: () {                        
                         _pageController.nextPage(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
@@ -119,7 +126,7 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
                             "Siguente",
                             style: TextStyle(
                               color: Colors
-                                  .black, // Texto negro como el segundo botón
+                                  .black,
                               fontSize: 17,
                             ),
                           ),
@@ -192,7 +199,7 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/img/logo_micelio_polera.png',
+                      'assets/img/repartidor.png',
                       height: 20,
                     ),
                     const SizedBox(width: 10),
@@ -250,7 +257,7 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
                 ),
                 onPressed: () {
                   Get.offAllNamed(
-                      '/client/home'); // Navega a la pantalla principal
+                      '/trade');
                 },
               ),
             ],
@@ -324,7 +331,7 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/img/logo_micelio_polera.png',
+                      'assets/img/repartidor.png',
                       height: 20,
                     ),
                     const SizedBox(width: 10),
@@ -383,7 +390,7 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
                 ),
                 onPressed: () {
                   Get.offAllNamed(
-                      '/client/home'); // Navega a la pantalla principal
+                      '/trade');
                 },
               ),
             ],
@@ -401,7 +408,7 @@ class _ClientHomeTutorialPageState extends State<ClientHomeTutorialPage> {
         child: Column(
           children: [
             Image.asset(
-              'assets/img/logo_micelio_polera.png',
+              'assets/img/repartidor.png',
               width: 180,
               height: 180,
             ),

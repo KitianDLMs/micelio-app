@@ -174,7 +174,10 @@ class _ClientProfileInfoPageState extends State<ClientProfileInfoPage> {
           children: [
             _iconButton(Icons.exit_to_app, () => con.signOut(context)),
             const SizedBox(height: 10),
-            if (con.user.value.id != null)
+            if (con.user.value.tradeId == null)
+              _iconButton(Icons.storefront_outlined, con.goToTrade),
+            const SizedBox(height: 10),
+            if (con.user.value.tradeId != null)            
               _iconButton(Icons.supervised_user_circle, con.goToRoles),
           ],
         ),
