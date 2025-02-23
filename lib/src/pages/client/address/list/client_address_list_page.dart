@@ -1,13 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:micelio/src/models/address.dart';
 import 'package:micelio/src/pages/client/address/list/client_address_list_controller.dart';
-import 'package:micelio/src/providers/socket_service.dart';
 import 'package:micelio/src/widgets/no_data_widget.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:provider/provider.dart';
 
 class ClientAddressListPage extends StatelessWidget {
   ClientAddressListController con = Get.put(ClientAddressListController());
@@ -169,6 +165,10 @@ class ClientAddressListPage extends StatelessWidget {
     deliveryPrice = '+ 2000';
   } else if (address.neighborhood == 'Alto el Manzano') {
     deliveryPrice = '+ 2500';
+  } else if (address.neighborhood == 'Plazuela') {
+    deliveryPrice = '+ 3000';
+  } else if (address.neighborhood == 'Polpaico') {
+    deliveryPrice = '+ 3500';
   }
 
   return Container(

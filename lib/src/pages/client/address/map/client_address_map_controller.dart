@@ -23,7 +23,7 @@ class ClientAddressMapController extends GetxController {
   Position? position;
 
   ClientAddressMapController() {
-    checkGPS(); // VERIFICAR SI EL GPS ESTA ACTIVO
+    checkGPS();
   }
 
   Future setLocationDraggableInfo() async {

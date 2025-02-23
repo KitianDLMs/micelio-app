@@ -35,10 +35,11 @@ class ProductsProvider extends GetConnect {
 
   Future<List<Product>> findByNameAndCategory(
       String idCategory, String name) async {
+        print('userSession.token ${userSession.token}');
     Response response =
         await get('$url/findByNameAndCategory/$idCategory/$name', headers: {
       'Content-Type': 'application/json',
-      // 'Authorization': userSession.sessionToken ?? ''
+      // 'Authorization': userSession.token ?? ''
     }); // ESPERAR HASTA QUE EL SERVIDOR NOS RETORNE LA RESPUESTA
 
     if (response.statusCode == 401) {

@@ -12,7 +12,7 @@ class RestaurantOrdersListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var storage = GetStorage().read('trade');
+    var storage = GetStorage().read('user');
     return Obx(() => DefaultTabController(
           length: con.status.length,
           child: Scaffold(
@@ -43,7 +43,8 @@ class RestaurantOrdersListPage extends StatelessWidget {
                           return Column(
                             children: [
                               if (status == 'ENTREGADO')
-                                _cardCalculate(snapshot.data!, storage),
+                                _cardCalculate(
+                                    snapshot.data!, storage['tradeId']),
                               Expanded(
                                 child: ListView.builder(
                                   itemCount: snapshot.data?.length ?? 0,
@@ -214,15 +215,16 @@ class RestaurantOrdersListPage extends StatelessWidget {
                 height: 30,
                 width: double.infinity,
                 decoration: const BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
-                    )),
+                  color: Colors.black,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                  ),
+                ),
                 child: Container(
                   margin: const EdgeInsets.only(top: 5),
                   child: Text(
-                    'Order #${order.id}',
+                    'Pedido #${order.id}',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold,
@@ -231,40 +233,63 @@ class RestaurantOrdersListPage extends StatelessWidget {
                   ),
                 ),
               ),
+              Positioned(
+                right: 10,
+                top: 5,
+                child: order.status == 'ENTREGADO'
+                    ? GestureDetector(
+                        onTap: () {
+                          var storage = GetStorage().read('user');                          
+                          con.deleteOrders(storage['tradeId']);
+                        },
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                          size: 24,
+                        ),
+                      )
+                    : SizedBox(),
+              ),
               Container(
                 margin: const EdgeInsets.only(top: 15, left: 20, right: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                        width: double.infinity,
-                        margin: const EdgeInsets.only(top: 5),
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                            'Pedido: ${RelativeTimeUtil.getRelativeTime(order.timestamp ?? 0)}',
-                            style: TextStyle(color: Colors.black))),
-                    Container(
                       width: double.infinity,
                       margin: const EdgeInsets.only(top: 5),
                       alignment: Alignment.centerLeft,
                       child: Text(
-                          'Cliente: ${order.user?.name ?? ''} ${order.user?.lastname ?? ''}',
-                          style: TextStyle(color: Colors.black)),
+                        'Pedido: ${RelativeTimeUtil.getRelativeTime(order.timestamp ?? 0)}',
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
                     Container(
                       width: double.infinity,
                       margin: const EdgeInsets.only(top: 5),
                       alignment: Alignment.centerLeft,
                       child: Text(
-                          'Destino: ${order.address?.neighborhood ?? ''} ${order.address?.address ?? ''} #${order.address?.number ?? ''}',
-                          style: TextStyle(color: Colors.black)),
+                        'Cliente: ${order.user?.name ?? ''} ${order.user?.lastname ?? ''}',
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
                     Container(
                       width: double.infinity,
                       margin: const EdgeInsets.only(top: 5),
                       alignment: Alignment.centerLeft,
-                      child: Text('Delivery: ${order.deliveryPrice ?? ''}',
-                          style: TextStyle(color: Colors.black)),
+                      child: Text(
+                        'Destino: ${order.address?.neighborhood ?? ''} ${order.address?.address ?? ''} #${order.address?.number ?? ''}',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(top: 5),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Delivery: ${order.deliveryPrice ?? ''}',
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
                   ],
                 ),

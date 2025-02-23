@@ -96,7 +96,6 @@ class ClientHomeTradePage extends StatelessWidget {
                       'Abre:',
                       style: TextStyle(fontSize: 16),
                     ),
-                    // Cambiamos el TextField por un Text widget
                     Text(
                       con.trade.value!.openingHours ?? 'No disponible',
                       style: TextStyle(fontSize: 16),
@@ -106,7 +105,6 @@ class ClientHomeTradePage extends StatelessWidget {
                       'Cierra:',
                       style: TextStyle(fontSize: 16, color: Colors.black),
                     ),
-                    // Cambiamos el TextField por un Text widget
                     Text(
                       con.trade.value!.closingHours ?? 'No disponible',
                       style: TextStyle(fontSize: 16),

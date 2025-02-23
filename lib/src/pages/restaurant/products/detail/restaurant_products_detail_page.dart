@@ -35,14 +35,16 @@ class RestaurantProductsDetailPage extends StatelessWidget {
               color: const Color.fromRGBO(245, 245, 245, 1.0),
               height: 100,
               child: _buttonsAddToBag()),
-          body: Column(
-            children: [
-              _imageSlideshow(context),
-              _textNameProduct(),
-              _textDescriptionProduct(),
-              _textPriceProduct(),
-              _textStockProduct()
-            ],
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                _imageSlideshow(context),
+                _textNameProduct(),
+                _textDescriptionProduct(),
+                _textPriceProduct(),
+                _textStockProduct()
+              ],
+            ),
           ),
         ));
   }
@@ -68,7 +70,7 @@ class RestaurantProductsDetailPage extends StatelessWidget {
       alignment: Alignment.centerLeft,
       margin: const EdgeInsets.only(top: 15, left: 30, right: 30),
       child: TextField(
-        keyboardType: TextInputType.number,
+        // keyboardType: TextInputType.number,
         decoration: const InputDecoration(
           labelText: "Stock Disponible",
           labelStyle: TextStyle(color: Colors.black),
@@ -77,7 +79,7 @@ class RestaurantProductsDetailPage extends StatelessWidget {
         controller: TextEditingController(text: stock.value.toString()),
         style: const TextStyle(color: Colors.black), 
         onChanged: (value) {
-          stock.value = int.tryParse(value) ?? 0; // Actualizar stock
+          stock.value = int.tryParse(value) ?? 0; 
         },
       ),
     );
@@ -132,16 +134,14 @@ class RestaurantProductsDetailPage extends StatelessWidget {
             children: [
               const Spacer(),
               ElevatedButton(
-                onPressed: () {
-                  // Llamamos al método updateProduct para actualizar los datos del producto
+                onPressed: () {                  
                   con.updateProduct(
                     product!,
                     nameController.text,
                     descriptionController.text,
                     double.tryParse(priceController.text) ?? 0.0,
                     stock.value,
-                  );
-                  // Después de actualizar, podemos reiniciar el contador o realizar cualquier otra acción
+                  );                  
                   counter.value = 0;
                 },
                 child: Text(

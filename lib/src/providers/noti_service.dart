@@ -43,7 +43,7 @@ class NotiService {
         // icon: '@mipmap-hdpi/ic_launcher'
       ),
       iOS: DarwinNotificationDetails(
-
+        
       )
     );
   }

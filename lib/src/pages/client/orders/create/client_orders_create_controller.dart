@@ -4,13 +4,13 @@ import 'package:micelio/src/models/product.dart';
 
 class ClientOrdersCreateController extends GetxController {
   RxList<Product> selectedProducts =
-      <Product>[].obs; // Usar RxList para reactividad
-  RxDouble total = 0.0.obs; // Total a pagar
+      <Product>[].obs;
+  RxDouble total = 0.0.obs;
 
   @override
   void onInit() {
     super.onInit();
-    loadSelectedProducts(); // Cargar productos desde GetStorage al iniciar
+    loadSelectedProducts();
   }
 
   void loadSelectedProducts() {

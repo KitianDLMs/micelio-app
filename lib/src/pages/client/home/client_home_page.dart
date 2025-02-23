@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:micelio/src/models/trade..dart';
 import 'package:micelio/src/models/user.dart';
 import 'package:micelio/src/pages/client/orders/list/client_orders_list_page.dart';
 import 'package:micelio/src/pages/client/profile/info/client_profile_info_page.dart';
@@ -98,7 +96,7 @@ class _ClientHomePageState extends State<ClientHomePage> {
                 icon: Icon(Icons.apps),
                 title: Text('Productos'),
                 activeColor: Colors.white,
-                inactiveColor: Colors.black),            
+                inactiveColor: Colors.black),
             BottomNavyBarItem(
                 icon: Icon(Icons.list),
                 title: Text('Pedidos'),
@@ -114,22 +112,16 @@ class _ClientHomePageState extends State<ClientHomePage> {
   }
 
   Widget _socialMediaIcons() {
-    var fbMic =
-        Uri.parse('${trade.tradeFacebook ?? ''}');
-    var igMic =
-        Uri.parse('${trade.tradeInstagram ?? ''}');
+    var fbMic = Uri.parse('${trade.tradeFacebook ?? ''}');
+    var igMic = Uri.parse('${trade.tradeInstagram ?? ''}');
     var wsMic = Uri.parse('${trade.tradeWsp ?? ''}');
     return Container(
-      padding: EdgeInsets.symmetric(
-          vertical: 10, horizontal: 20),
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Row(
-        mainAxisAlignment:
-            MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _animatedImageButton(
-            imagePath: '${trade.image}',
-            onPressed: () => con.goToTrade()
-          ),
+              imagePath: '${trade.image}', onPressed: () => con.goToTrade()),
           _animatedIconButton(
             icon: FontAwesome.facebook,
             color: Colors.blue,

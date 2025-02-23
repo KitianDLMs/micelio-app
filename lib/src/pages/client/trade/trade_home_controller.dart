@@ -8,20 +8,20 @@ import 'package:micelio/src/providers/trade_provider.dart';
 
 
 class TradeHomeController extends GetxController {
-  var trades = <Trade>[].obs; // Lista de trades observable
+  var trades = <Trade>[].obs;
   var isLoading = false.obs;
 
   TradeProvider tradeProvider = TradeProvider();
   User user = User.fromJson(GetStorage().read('user') ?? {});
 
   TradeHomeController() {
-    fetchTrades(); // Carga los trades al inicializar el controlador
+    fetchTrades();
   }
 
   void fetchTrades() async {
     isLoading.value = true;
     try {
-      var result = await tradeProvider.getAll(); // Supongamos que retorna una lista de Trade
+      var result = await tradeProvider.getAll();
       trades.value = result;
     } catch (e) {
       print('Error al obtener los trades: $e');
@@ -30,10 +30,7 @@ class TradeHomeController extends GetxController {
     }
   }
 
-  void goToClientPage() {
-    // print('goToClientPage ${trade.userId}');
-    // GetStorage().write('trade', trade);
-    // GetStorage().write('trade${trade.id}',
+  void goToClientPage() {    
     Get.off(() => ClientHomePage());
   }
 

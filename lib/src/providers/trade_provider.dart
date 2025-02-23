@@ -41,7 +41,6 @@ class TradeProvider extends GetConnect {
     if (response.statusCode == 200) {
       Map<String, dynamic> responseMap = response.body;
       Trade trade = Trade.fromJson(responseMap);
-      print(trade);
       return trade;
     } else {
       throw Exception('Error al obtener el trade: ${response.statusCode}');
@@ -75,5 +74,17 @@ class TradeProvider extends GetConnect {
       print('Error al actualizar trade: $e');
       return ResponseApi(success: false, message: 'Error en la actualización');
     }
+  }
+
+  deleteOrders(id) async {    
+    Response response = await delete('$url/delete/$id', headers: {      
+      'Content-Type': 'application/json',
+      // 'Authorization': userSession.sessionToken ?? ''
+    });        
+    if (response.status.code == 201) {      
+      Get.offAllNamed(
+                      '/home-tutorial');
+    }
+    return response;
   }
 }

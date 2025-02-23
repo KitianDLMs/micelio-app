@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:micelio/src/environment/environment.dart';
@@ -16,7 +14,7 @@ class AddressProvider extends GetConnect {
     Response response = await get('$url/findByUser/$idUser', headers: {
       'Content-Type': 'application/json',
       // 'Authorization': userSession.notification_token ?? ''
-    }); // ESPERAR HASTA QUE EL SERVIDOR NOS RETORNE LA RESPUESTA
+    });
 
     if (response.statusCode == 401) {
       Get.snackbar('Peticion denegada',
@@ -31,7 +29,7 @@ class AddressProvider extends GetConnect {
     Response response = await post('$url/create', address.toJson(), headers: {
       'Content-Type': 'application/json',
       // 'Authorization': userSession.notification_token ?? ''
-    }); // ESPERAR HASTA QUE EL SERVIDOR NOS RETORNE LA RESPUESTA
+    });
     
     ResponseApi responseApi = ResponseApi.fromJson(response.body);    
 

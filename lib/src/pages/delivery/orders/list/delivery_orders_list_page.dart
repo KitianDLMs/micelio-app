@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:micelio/src/models/order.dart';
+import 'package:micelio/src/models/trade..dart';
 import 'package:micelio/src/pages/delivery/orders/list/delivery_orders_list_controller.dart';
+import 'package:micelio/src/providers/trade_provider.dart';
 import 'package:micelio/src/widgets/no_data_widget.dart';
 
 class DeliveryOrdersListPage extends StatelessWidget {
@@ -96,49 +98,76 @@ class DeliveryOrdersListPage extends StatelessWidget {
     );
   }
 
+  Future<void> fetchTrade(tradeId) async {
+    try {
+      TradeProvider tradeProvider = TradeProvider();
+      var trade = tradeProvider.getById(tradeId);
+      print('delivery ${trade}');
+    } catch (e) {
+      print('Error al obtener el trade: $e');
+    } finally {}
+  }
+
   Widget _buildTotalCard(List<Order> orders, String tradeId) {
     double totalDelivery =
         orders.fold(0.0, (sum, order) => sum + (order.deliveryPrice ?? 0.0));
+    TradeProvider tradeProvider = TradeProvider();
 
-    return Container(
-      height: 100,
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Card(
-        elevation: 3.0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        child: Stack(
-          children: [
-            Container(
-              height: 50,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15)),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                'Total Delivery - Comercio #$tradeId',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: Colors.amber),
-              ),
+    return FutureBuilder(
+      future: tradeProvider.getById(tradeId),
+      builder: (context, AsyncSnapshot<Trade> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError || !snapshot.hasData) {
+          return Center(child: Text("Error al cargar comercio"));
+        }
+
+        Trade trade = snapshot.data!;
+
+        return Container(
+          height: 70,
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Card(
+            elevation: 3.0,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: Stack(
+              children: [
+                Container(
+                  height: 20,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15)),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    '${trade.name}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        color: Colors.amber),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Total Delivery: \$${totalDelivery.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ),
+              ],
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Total Delivery: \$${totalDelivery.toStringAsFixed(2)}',
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

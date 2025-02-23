@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:micelio/src/environment/environment.dart';
-import 'package:micelio/src/models/category.dart';
 import 'package:micelio/src/models/order.dart';
 import 'package:micelio/src/models/response_api.dart';
 import 'package:micelio/src/models/user.dart';
@@ -16,7 +15,7 @@ class OrdersProvider extends GetConnect {
   Future<List<Order>> findAll() async {
     Response response = await get('$url/findAll', headers: {
       'Content-Type': 'application/json',
-      // 'Authorization': userSession.sessionToken ?? ''
+      // 'Authorization': userSession.token ?? ''
     });
 
     if (response.statusCode == 401) {

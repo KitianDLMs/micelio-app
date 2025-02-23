@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class RestaurantOrdersDetailController extends GetxController {
   Order order = Order.fromJson(Get.arguments['order']);
-
+  
   var total = 0.0.obs;
   var idDelivery = ''.obs;
   var deliveryId;

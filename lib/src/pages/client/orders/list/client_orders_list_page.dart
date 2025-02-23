@@ -3,13 +3,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:micelio/src/models/order.dart';
 import 'package:micelio/src/pages/client/orders/list/client_orders_list_controller.dart';
-import 'package:micelio/src/pages/delivery/orders/list/delivery_orders_list_controller.dart';
-import 'package:micelio/src/pages/restaurant/orders/list/restaurant_orders_list_controller.dart';
-import 'package:micelio/src/providers/noti_service.dart';
-import 'package:micelio/src/providers/socket_service.dart';
 import 'package:micelio/src/utils/relative_time_util.dart';
 import 'package:micelio/src/widgets/no_data_widget.dart';
-import 'package:provider/provider.dart';
 
 class ClientOrdersListPage extends StatelessWidget {
   ClientOrdersListController con = Get.put(ClientOrdersListController());

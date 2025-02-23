@@ -1,9 +1,5 @@
-import 'package:get_storage/get_storage.dart';
-import 'package:micelio/src/models/category.dart';
-import 'package:micelio/src/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:micelio/src/models/user.dart';
 import 'package:micelio/src/pages/restaurant/trade/home/reataurant_home_trade_controller.dart';
 
 class RestaurantHomeTradePage extends StatelessWidget {
@@ -80,13 +76,13 @@ class RestaurantHomeTradePage extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Trade: ${con.trade.value!.name}',
+                      '${con.trade.value!.name}',
                       style:
                           TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Descripción: ${con.trade.value!.description}',
+                      con.trade.value!.description,
                       style: TextStyle(fontSize: 16),
                     ),
                     SizedBox(height: 8),

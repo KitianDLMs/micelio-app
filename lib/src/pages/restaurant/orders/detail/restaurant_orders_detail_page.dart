@@ -11,30 +11,32 @@ import 'package:micelio/src/widgets/no_data_widget.dart';
 import 'package:provider/provider.dart';
 
 class RestaurantOrdersDetailPage extends StatelessWidget {
-
-  RestaurantOrdersDetailController con = Get.put(RestaurantOrdersDetailController());
+  RestaurantOrdersDetailController con =
+      Get.put(RestaurantOrdersDetailController());
   @override
-  Widget build(BuildContext context) {  
+  Widget build(BuildContext context) {
     return Obx(() => Scaffold(
           bottomNavigationBar: Container(
             color: Color.fromRGBO(245, 245, 245, 1),
             height: con.order.status == 'PAGADO'
                 ? MediaQuery.of(context).size.height * 0.50
                 : MediaQuery.of(context).size.height * 0.45,
-            child: Column(
-              children: [
-                _dataDate(),
-                _dataClient(),
-                _dataAddress(),
-                _dataDelivery(),
-                _totalToPay(context),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _dataDate(),
+                  _dataClient(),
+                  _dataAddress(),
+                  _dataDelivery(),
+                  _totalToPay(context),
+                ],
+              ),
             ),
           ),
           appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.black),
             title: Text(
-              'Order #${con.order.id}',
+              'Pedido #${con.order.id}',
               style: TextStyle(color: Colors.black),
             ),
             actions: [
@@ -65,9 +67,11 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text('Cliente y Telefono', style: TextStyle(color: Colors.black)),
+        title:
+            Text('Cliente y Telefono', style: TextStyle(color: Colors.black)),
         subtitle: Text(
-            '${con.order.user?.name ?? ''} ${con.order.user?.lastname ?? ''} - ${con.order.user?.phone ?? ''}', style: TextStyle(color: Colors.black)),
+            '${con.order.user?.name ?? ''} ${con.order.user?.lastname ?? ''} - ${con.order.user?.phone ?? ''}',
+            style: TextStyle(color: Colors.black)),
         trailing: Icon(Icons.person),
       ),
     );
@@ -78,9 +82,11 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
         ? Container(
             margin: EdgeInsets.symmetric(horizontal: 20),
             child: ListTile(
-              title: Text('Repartidor asignado', style: TextStyle(color: Colors.black)),
+              title: Text('Repartidor asignado',
+                  style: TextStyle(color: Colors.black)),
               subtitle: Text(
-                  '${con.order.delivery?.name ?? ''} ${con.order.delivery?.lastname ?? ''} - ${con.order.delivery?.phone ?? ''}', style: TextStyle(color: Colors.black)),
+                  '${con.order.delivery?.name ?? ''} ${con.order.delivery?.lastname ?? ''} - ${con.order.delivery?.phone ?? ''}',
+                  style: TextStyle(color: Colors.black)),
               trailing: Icon(Icons.delivery_dining),
             ),
           )
@@ -91,12 +97,29 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text('Direccion de entrega', style: TextStyle(color: Colors.black)),
-        subtitle: Text('${con.order.address?.neighborhood ?? ''} ${con.order.address?.address ?? ''} #${con.order.address?.number ?? ''}', style: TextStyle(color: Colors.black)),
+        title:
+            Text('Direccion de entrega', style: TextStyle(color: Colors.black)),
+        subtitle: Text(
+            '${con.order.address?.neighborhood ?? ''} ${con.order.address?.address ?? ''} #${con.order.address?.number ?? ''}',
+            style: TextStyle(color: Colors.black)),
         trailing: Icon(Icons.location_on),
       ),
     );
   }
+
+  // Widget _dataClient() {
+  //   return Container(
+  //     margin: EdgeInsets.symmetric(horizontal: 20),
+  //     child: ListTile(
+  //       title:
+  //           Text('Direccion de entrega', style: TextStyle(color: Colors.black)),
+  //       subtitle: Text(
+  //           '${con.order.address?.neighborhood ?? ''} ${con.order.address?.address ?? ''} #${con.order.address?.number ?? ''}',
+  //           style: TextStyle(color: Colors.black)),
+  //       trailing: Icon(Icons.location_on),
+  //     ),
+  //   );
+  // }
 
   Widget _dataDate() {
     return Container(
@@ -104,7 +127,8 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
       child: ListTile(
         title: Text('Fecha del pedido', style: TextStyle(color: Colors.black)),
         subtitle: Text(
-            RelativeTimeUtil.getRelativeTime(con.order.timestamp ?? 0), style: TextStyle(color: Colors.black)),
+            RelativeTimeUtil.getRelativeTime(con.order.timestamp ?? 0),
+            style: TextStyle(color: Colors.black)),
         trailing: Icon(Icons.timer),
       ),
     );
@@ -122,14 +146,13 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
             children: [
               Text(
                 product.name ?? '',
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
               ),
               SizedBox(height: 7),
               Text(
                 'Cantidad: ${product.quantity}',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13),
+                style: TextStyle(color: Colors.black, fontSize: 13),
               ),
             ],
           ),
@@ -138,10 +161,10 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _imageProduct(Product product) {    
+  Widget _imageProduct(Product product) {
     return Container(
       height: 50,
-      width: 50,      
+      width: 50,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: FadeInImage(
@@ -156,7 +179,9 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _totalToPay(BuildContext context) {    
+  Widget _totalToPay(BuildContext context) {
+    double shippingCost = con.order.deliveryPrice ?? 0.0;
+
     return Column(
       children: [
         Divider(height: 1, color: Colors.grey[300]),
@@ -176,36 +201,72 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
             ? _dropDownDeliveryMen(con.users)
             : Container(),
         Container(
-          margin: EdgeInsets.only(
-              left: con.order.status == 'PAGADO' ? 30 : 37, top: 15),
-          child: Row(
-            mainAxisAlignment: con.order.status == 'PAGADO'
-                ? MainAxisAlignment.center
-                : MainAxisAlignment.start,
+          margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'TOTAL: \$${con.total.value}',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black),
+              _buildPriceRow('Subtotal:', con.total.value, Colors.black),
+              _buildPriceRow('Costo de envío:', shippingCost, Colors.black),
+              Divider(height: 1, color: Colors.grey[300]),
+              _buildPriceRow(
+                'TOTAL:',
+                con.total.value + shippingCost,
+                Colors.black,
+                isBold: true,
+                fontSize: 17,
               ),
-              con.order.status == 'PAGADO'
-                  ? Container(
-                      margin: EdgeInsets.symmetric(horizontal: 30),
-                      child: ElevatedButton(
-                          onPressed: () => {                            
-                            con.updateOrder(context),                       
-                          },
-                          style: ElevatedButton.styleFrom(
-                              padding: Platform.isAndroid ? EdgeInsets.all(10) : EdgeInsets.all(7)
-                          ),
-                          child: Text(
-                            'DESPACHAR PEDIDO',
-                            style: TextStyle(color: Colors.black),
-                          )),
-                    )
-                  : Container()
             ],
           ),
-        )
+        ),
+        con.order.status == 'PAGADO'
+            ? Container(
+                margin: EdgeInsets.symmetric(horizontal: 30),
+                child: ElevatedButton(
+                  onPressed: () {
+                    con.updateOrder(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(15),
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(
+                    'DESPACHAR PEDIDO',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ))
+            : Container()
+      ],
+    );
+  }
+
+  Widget _buildPriceRow(String label, double value, Color color,
+      {bool isBold = false, double fontSize = 16}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            color: color,
+          ),
+        ),
+        Text(
+          '\$${value.toStringAsFixed(2)}',
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            color: color,
+          ),
+        ),
       ],
     );
   }
@@ -230,7 +291,7 @@ class RestaurantOrdersDetailPage extends StatelessWidget {
         ),
         items: _dropDownItems(users),
         value: con.idDelivery.value == '' ? null : con.idDelivery.value,
-        onChanged: (option) {                            
+        onChanged: (option) {
           con.idDelivery.value = option.toString();
         },
       ),

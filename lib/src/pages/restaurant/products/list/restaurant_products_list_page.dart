@@ -85,16 +85,6 @@ class RestaurantProductsListPage extends StatelessWidget {
               );
             }).toList(),
           ),
-          // bottomNavigationBar: ElevatedButton(
-          //   onPressed: () {
-          //     NotiService().showNotification(
-          //       title: 'Title',
-          //       body: 'Body'
-          //     );
-          //     // NotiService().onTapNotification();
-          //   },
-          //   child: Text('send notification')
-          // ),
         ),
       );
     });

@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:micelio/src/models/user.dart';
-import 'package:micelio/src/providers/push_notifications_provider.dart';
 
 class RestaurantHomeController extends GetxController {  
   var indexTab = 0.obs;

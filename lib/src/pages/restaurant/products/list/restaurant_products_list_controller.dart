@@ -61,19 +61,17 @@ class RestaurantProductsListController extends GetxController {
     getCategories();
   }  
 
-  Future<void> getCategories() async {
-    var trade = GetStorage().read('trade');
-    var user = GetStorage().read('user');
-    print('trade $trade');
+  Future<void> getCategories() async {    
+    var user = GetStorage().read('user');          
     isLoading.value = true;
     try {
       user == null 
-        ? categories.assignAll(await categoriesProvider.getAllByTrade(trade)) 
+        ? categories.assignAll(await categoriesProvider.getAllByTrade(user['tradeId'])) 
         : null ; 
 
       user['roles'].length == 3 
-        ? categories.assignAll(await categoriesProvider.getAllByTrade(trade))
-        : categories.assignAll(await categoriesProvider.getAllByTrade(trade));
+        ? categories.assignAll(await categoriesProvider.getAllByTrade(user['tradeId']))
+        : categories.assignAll(await categoriesProvider.getAllByTrade(user['tradeId']));
     } catch (e) {      
       print('Error al cargar categorías: $e');
     } finally {

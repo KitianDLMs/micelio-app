@@ -1,25 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:micelio/src/models/trade..dart';
 import 'package:micelio/src/models/user.dart';
-import 'package:micelio/src/pages/client/orders/list/client_orders_list_page.dart';
 import 'package:micelio/src/pages/client/profile/info/client_profile_info_page.dart';
-import 'package:micelio/src/pages/client/home/client_home_controller.dart';
-import 'package:micelio/src/pages/client/products/list/client_products_list_page.dart';
 import 'package:micelio/src/pages/restaurant/categories/create/restaurant_categories_create_page.dart';
 import 'package:micelio/src/pages/restaurant/home/restaurant_home_controller.dart';
 import 'package:micelio/src/pages/restaurant/orders/list/restaurant_orders_list_page.dart';
-import 'package:micelio/src/pages/restaurant/products/create/restaurant_products_create_page.dart';
 import 'package:micelio/src/pages/restaurant/products/home/restaurant_product_home_page.dart';
-import 'package:micelio/src/pages/restaurant/products/list/restaurant_products_list_page.dart';
 import 'package:micelio/src/pages/restaurant/trade/create/restaurant_trade_create_page.dart';
 import 'package:micelio/src/pages/restaurant/trade/home/reataurant_home_trade_page.dart';
 import 'package:micelio/src/providers/noti_service.dart';
 import 'package:micelio/src/providers/socket_service.dart';
 import 'package:micelio/src/utils/custom_animated_bottom_bar.dart';
-import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,6 +26,7 @@ class _RestaurantHomePageState extends State<RestaurantHomePage> {
 
   @override
   void initState() {    
+    print('restaurant home page ${userSession.tradeId}');
     super.initState();    
     final socketService = Provider.of<SocketService>(context, listen: false);
     socketService.connect();
@@ -62,16 +55,16 @@ class _RestaurantHomePageState extends State<RestaurantHomePage> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => SocketService()),
+        ChangeNotifierProvider(create: (_) => SocketService()),                  
       ],
       child: Scaffold(
           bottomNavigationBar: SafeArea(child: _bottomBar()),
           body: Obx(() => IndexedStack(
                 index: con.indexTab.value,
                 children: [
-                  userSession.tradeId == null ? 
-                     RestaurantTradeCreatePage() : 
-                     RestaurantHomeTradePage(),
+                  userSession.tradeId == null
+                      ? RestaurantTradeCreatePage()
+                      : RestaurantHomeTradePage(),
                   RestaurantOrdersListPage(),
                   RestaurantCategoriesCreatePage(),
                   // RestaurantProductsCreatePage(),
@@ -85,7 +78,7 @@ class _RestaurantHomePageState extends State<RestaurantHomePage> {
     );
   }
 
-    Widget _bottomBar() {
+  Widget _bottomBar() {
     return Obx(() => CustomAnimatedBottomBar(
           containerHeight: 70,
           backgroundColor: Colors.amber,
@@ -131,11 +124,9 @@ class _RestaurantHomePageState extends State<RestaurantHomePage> {
     //     Uri.parse('${trade.tradeInstagram ?? ''}');
     // var wsMic = Uri.parse('${trade.tradeWsp ?? ''}');
     return Container(
-      padding: EdgeInsets.symmetric(
-          vertical: 10, horizontal: 20),
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Row(
-        mainAxisAlignment:
-            MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // _animatedImageButton(
           //   imagePath: '${trade.image}',

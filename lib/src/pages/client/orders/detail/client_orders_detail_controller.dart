@@ -1,7 +1,5 @@
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:micelio/src/models/order.dart';
-import 'package:micelio/src/models/response_api.dart';
 import 'package:micelio/src/models/user.dart';
 import 'package:micelio/src/providers/orders_provider.dart';
 import 'package:micelio/src/providers/users_provider.dart';

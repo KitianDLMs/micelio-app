@@ -3,7 +3,6 @@ import 'package:micelio/src/models/product.dart';
 import 'package:micelio/src/models/response_api.dart';
 import 'package:micelio/src/models/trade..dart';
 import 'package:micelio/src/models/user.dart';
-import 'package:micelio/src/pages/client/products/detail/client_products_detail_page.dart';
 import 'package:micelio/src/providers/categories_provider.dart';
 import 'package:micelio/src/providers/products_provider.dart';
 import 'package:get/get.dart';
@@ -11,10 +10,7 @@ import 'package:get_storage/get_storage.dart';
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:micelio/src/providers/trade_provider.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class RestaurantHomeTradeController extends GetxController {
   final CategoriesProvider categoriesProvider = CategoriesProvider();
